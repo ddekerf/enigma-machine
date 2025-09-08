@@ -42,40 +42,80 @@ public class EnigmaEncodingTests
     public void Rotors_I_III_V_WWW_BBB_Encrypts_Correctly()
     {
         var machine = BuildMachine(new[] { RotorType.I, RotorType.III, RotorType.V }, "WWW", "BBB");
-        var result = Process(machine, "HelloHowAreYou");
+        var result = Process(machine, "HELLOHOWAREYOU");
         Assert.Equal("DXXIQUIJZMNBEH", result);
+    }
+
+        [Fact]
+    public void Rotors_I_III_V_WWW_BBB_Decrypts_Correctly()
+    {
+        var machine = BuildMachine(new[] { RotorType.I, RotorType.III, RotorType.V }, "WWW", "BBB");
+        var result = Process(machine, "DXXIQUIJZMNBEH");
+        Assert.Equal("HELLOHOWAREYOU", result);
     }
 
     [Fact]
     public void Rotors_I_III_V_ABC_XYZ_Encrypts_Correctly()
     {
         var machine = BuildMachine(new[] { RotorType.I, RotorType.III, RotorType.V }, "ABC", "XYZ");
-        var result = Process(machine, "HelloHowAreYou");
+        var result = Process(machine, "HELLOHOWAREYOU");
         Assert.Equal("YNHWFVJEMWGLVY", result);
+    }
+
+    [Fact]
+    public void Rotors_I_III_V_ABC_XYZ_Decrypts_Correctly()
+    {
+        var machine = BuildMachine(new[] { RotorType.I, RotorType.III, RotorType.V }, "ABC", "XYZ");
+        var result = Process(machine, "YNHWFVJEMWGLVY");
+        Assert.Equal("HELLOHOWAREYOU", result);
     }
 
     [Fact]
     public void Rotors_I_III_IV_ABC_XYZ_Encrypts_Correctly()
     {
         var machine = BuildMachine(new[] { RotorType.I, RotorType.III, RotorType.IV }, "ABC", "XYZ");
-        var result = Process(machine, "HelloHowAreYou");
+        var result = Process(machine, "HELLOHOWAREYOU");
         Assert.Equal("PKWSGCUAYAMUDG", result);
+    }
+
+    [Fact]
+    public void Rotors_I_III_IV_ABC_XYZ_Decrypts_Correctly()
+    {
+        var machine = BuildMachine(new[] { RotorType.I, RotorType.III, RotorType.IV }, "ABC", "XYZ");
+        var result = Process(machine, "PKWSGCUAYAMUDG");
+        Assert.Equal("HELLOHOWAREYOU", result);
     }
 
     [Fact]
     public void Rotors_IV_III_V_ABC_XYZ_Encrypts_Correctly()
     {
         var machine = BuildMachine(new[] { RotorType.IV, RotorType.III, RotorType.V }, "ABC", "XYZ");
-        var result = Process(machine, "HelloHowAreYou");
+        var result = Process(machine, "HELLOHOWAREYOU");
         Assert.Equal("ZMDVVLHGBMXMTN", result);
+    }
+
+    [Fact]
+    public void Rotors_IV_III_V_ABC_XYZ_Decrypts_Correctly()
+    {
+        var machine = BuildMachine(new[] { RotorType.IV, RotorType.III, RotorType.V }, "ABC", "XYZ");
+        var result = Process(machine, "ZMDVVLHGBMXMTN");
+        Assert.Equal("HELLOHOWAREYOU", result);
     }
 
     [Fact]
     public void Rotors_I_II_III_AAA_ZZZ_Encrypts_Correctly()
     {
         var machine = BuildMachine(new[] { RotorType.I, RotorType.II, RotorType.III }, "AAA", "ZZZ");
-        var result = Process(machine, "HelloHowAreYou");
+        var result = Process(machine, "HELLOHOWAREYOU");
         Assert.Equal("XNNJSANZVAZHBV", result);
+    }
+
+    [Fact]
+    public void Rotors_I_II_III_AAA_ZZZ_Decrypts_Correctly()
+    {
+        var machine = BuildMachine(new[] { RotorType.I, RotorType.II, RotorType.III }, "AAA", "ZZZ");
+        var result = Process(machine, "XNNJSANZVAZHBV");
+        Assert.Equal("HELLOHOWAREYOU", result);
     }
 
     [Fact]
@@ -84,6 +124,14 @@ public class EnigmaEncodingTests
         var machine = BuildMachine(new[] { RotorType.I, RotorType.II, RotorType.III }, "AAA", "ZZZ");
         var result = Process(machine, "QWERTY");
         Assert.Equal("CIJWHI", result);
+    }
+
+    [Fact]
+    public void Rotors_I_II_III_AAA_ZZZ_Decrypts_Qwerty_Correctly()
+    {
+        var machine = BuildMachine(new[] { RotorType.I, RotorType.II, RotorType.III }, "AAA", "ZZZ");
+        var result = Process(machine, "CIJWHI");
+        Assert.Equal("QWERTY", result);
     }
 
     private class ReflectorB : IReflector
