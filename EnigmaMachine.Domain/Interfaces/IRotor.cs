@@ -31,5 +31,12 @@ namespace EnigmaMachine.Domain.Interfaces
         /// <param name="input">The input letter to be processed.</param>
         /// <returns>The output letter after processing.</returns>
         char ProcessLetter(char input);
+
+    /// <summary>
+    /// Processes the input letter through the rotor in reverse (right-to-left direction).
+    /// </summary>
+    /// <param name="input">The input letter to be processed in reverse.</param>
+    /// <returns>The output letter after reverse processing.</returns>
+    char ProcessBackward(char input);
     }
 }

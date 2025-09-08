@@ -10,7 +10,7 @@ namespace EnigmaMachine.Domain.Tests;
 
 public class EnigmaEncodingTests
 {
-    private static EnigmaMachine BuildMachine(RotorType[] rotorsLeftToRight, string rotorStart, string ringSettings)
+    private static EnigmaMachine.Domain.Entities.EnigmaMachine BuildMachine(RotorType[] rotorsLeftToRight, string rotorStart, string ringSettings)
     {
         var plugboard = new Plugboard();
         foreach (var pair in "BA QU CG XT DI ER JW LS VK NM".Split(' ', System.StringSplitOptions.RemoveEmptyEntries))
@@ -27,7 +27,7 @@ public class EnigmaEncodingTests
         return EnigmaMachineFactory.CreateEnigmaI(rotorTypes, rings, positions, plugboard, reflector);
     }
 
-    private static string Process(EnigmaMachine machine, string data)
+    private static string Process(EnigmaMachine.Domain.Entities.EnigmaMachine machine, string data)
     {
         var sb = new StringBuilder();
         foreach (var ch in data)

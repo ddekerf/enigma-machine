@@ -20,7 +20,7 @@ namespace EnigmaMachine.Domain.Factories
         /// <param name="plugboard">Plugboard configuration.</param>
         /// <param name="reflector">Reflector to use.</param>
         /// <returns>Configured <see cref="EnigmaMachine"/> instance.</returns>
-        public static EnigmaMachine CreateEnigmaI(
+    public static global::EnigmaMachine.Domain.Entities.EnigmaMachine CreateEnigmaI(
             RotorType[] types,
             char[] ringSettings,
             char[] initialPositions,
@@ -39,7 +39,7 @@ namespace EnigmaMachine.Domain.Factories
                 RotorFactory.Create(types[2], ringSettings[2], initialPositions[2])
             };
 
-            return new EnigmaMachine(rotors, plugboard, reflector);
+            return new global::EnigmaMachine.Domain.Entities.EnigmaMachine(rotors, plugboard, reflector);
         }
     }
 }

@@ -48,10 +48,10 @@ namespace EnigmaMachine.Domain.Entities
         public int Position => _position;
 
         /// <inheritdoc />
-        public bool AtNotch => _position == _notch;
+    public bool AtNotch => _position == _notch;
 
-        /// <inheritdoc />
-        public bool IsAtNotch => (_position.Position + 1) % 26 == 0;
+    /// <inheritdoc />
+    public bool IsAtNotch => _position == _notch;
 
         /// <inheritdoc />
         public void Rotate()
@@ -68,6 +68,16 @@ namespace EnigmaMachine.Domain.Entities
             // Adjust for rotor position and ring setting
             int stepped = (c + _position - _ringSetting + 26) % 26;
             int mapped = _forwardMapping[stepped];
+            int result = (mapped - _position + _ringSetting + 26) % 26;
+            return (char)(result + 'A');
+        }
+
+        /// <inheritdoc />
+        public char ProcessBackward(char input)
+        {
+            int c = input - 'A';
+            int stepped = (c + _position - _ringSetting + 26) % 26;
+            int mapped = _reverseMapping[stepped];
             int result = (mapped - _position + _ringSetting + 26) % 26;
             return (char)(result + 'A');
         }

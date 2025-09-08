@@ -40,10 +40,13 @@ namespace EnigmaMachine.Domain.Entities
                 throw new ArgumentNullException(nameof(input));
             }
 
+            // Step rotors before processing (Enigma stepping occurs prior to encoding)
+            StepRotors();
+
             // Initial plugboard transformation
             var signal = _plugboard.Transform(input).Character;
 
-            // Forward pass through the rotors
+            // Forward pass through the rotors (right to left)
             foreach (var rotor in _rotors)
             {
                 signal = rotor.ProcessLetter(signal);
@@ -52,17 +55,14 @@ namespace EnigmaMachine.Domain.Entities
             // Reflect the signal
             signal = _reflector.Reflect(signal);
 
-            // Reverse pass through the rotors
+            // Reverse pass through the rotors (left to right)
             for (int i = _rotors.Count - 1; i >= 0; i--)
             {
-                signal = _rotors[i].ProcessLetter(signal);
+                signal = _rotors[i].ProcessBackward(signal);
             }
 
             // Final plugboard transformation
             var output = _plugboard.Transform(new Letter(signal));
-
-            // Rotate rotors for the next letter
-            StepRotors();
 
             return output;
         }
