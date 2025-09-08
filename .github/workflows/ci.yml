@@ -23,10 +23,28 @@ jobs:
         run: dotnet restore
       - name: Build
         run: dotnet build --configuration Release --no-restore
+      - name: Install dotnet-format (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          if (-not (Get-Command "dotnet-format" -ErrorAction SilentlyContinue)) {
+            dotnet tool install -g dotnet-format
+          } else {
+            dotnet tool update -g dotnet-format
+          }
+      - name: Install dotnet-format (Linux/macOS)
+        if: runner.os != 'Windows'
+        shell: bash
+        run: |
+          dotnet tool update -g dotnet-format || dotnet tool install -g dotnet-format
+          echo "$HOME/.dotnet/tools" >> "$GITHUB_PATH"
       - name: Verify formatting
-        run: dotnet tool update -g dotnet-format && dotnet format --verify-no-changes
-      - name: Test with coverage
-        run: dotnet test --configuration Release --no-build --nologo -v minimal /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura
+        run: dotnet format --verify-no-changes
+      - name: Test with coverage (XPlat collector)
+        run: >-
+          dotnet test --configuration Release --no-build --nologo -v minimal
+          --collect "XPlat Code Coverage"
+          -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=cobertura
       - name: Publish coverage artifact
         uses: actions/upload-artifact@v4
         with:
