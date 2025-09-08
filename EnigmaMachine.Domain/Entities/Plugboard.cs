@@ -64,7 +64,7 @@ namespace EnigmaMachine.Domain.Entities
         }
 
         // IPlugboard implementation
-    public void Connect(PlugboardPair pair)
+        public void Connect(PlugboardPair pair)
         {
             ConnectInternal(pair.FirstLetter, pair.SecondLetter);
         }
@@ -74,7 +74,7 @@ namespace EnigmaMachine.Domain.Entities
             DisconnectInternal(pair.FirstLetter, pair.SecondLetter);
         }
 
-    public Letter Transform(Letter letter)
+        public Letter Transform(Letter letter)
         {
             var transformed = GetConnectedLetter(letter.Character);
             return new Letter(transformed);

@@ -17,7 +17,7 @@ namespace EnigmaMachine.Domain.Entities
     /// </remarks>
     public sealed class EnigmaMachine : IEnigmaMachine, IDiagnosticEnigmaMachine
     {
-    private readonly IRotor[] _rotors;
+        private readonly IRotor[] _rotors;
         private readonly IPlugboard _plugboard;
         private readonly IReflector _reflector;
 
@@ -40,7 +40,7 @@ namespace EnigmaMachine.Domain.Entities
         /// </summary>
         /// <param name="input">The input letter to be processed.</param>
         /// <returns>The resulting letter after processing.</returns>
-    public Letter ProcessLetter(Letter input)
+        public Letter ProcessLetter(Letter input)
         {
             if (input == null)
             {
@@ -74,7 +74,7 @@ namespace EnigmaMachine.Domain.Entities
             return output;
         }
 
-    // IEnigmaMachine intentionally exposes only ProcessLetter
+        // IEnigmaMachine intentionally exposes only ProcessLetter
 
         private void StepRotors()
         {

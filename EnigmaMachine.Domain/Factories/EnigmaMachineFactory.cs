@@ -21,12 +21,12 @@ namespace EnigmaMachine.Domain.Factories
         /// <param name="plugboard">Plugboard configuration.</param>
         /// <param name="reflector">Reflector to use.</param>
         /// <returns>Configured <see cref="IEnigmaMachine"/> instance.</returns>
-    public static IEnigmaMachine CreateEnigmaI(
-            RotorType[] types,
-            char[] ringSettings,
-            char[] initialPositions,
-            IPlugboard plugboard,
-            IReflector reflector)
+        public static IEnigmaMachine CreateEnigmaI(
+                RotorType[] types,
+                char[] ringSettings,
+                char[] initialPositions,
+                IPlugboard plugboard,
+                IReflector reflector)
         {
             if (types.Length != 3 || ringSettings.Length != 3 || initialPositions.Length != 3)
             {
@@ -43,18 +43,18 @@ namespace EnigmaMachine.Domain.Factories
                 RotorFactory.Create(types[2], ringSettings[2], initialPositions[2])
             };
 
-        return new EnigmaMachine.Domain.Entities.EnigmaMachine(rotors, plugboard, reflector);
+            return new EnigmaMachine.Domain.Entities.EnigmaMachine(rotors, plugboard, reflector);
         }
 
-    /// <summary>
-    /// Creates an Enigma I machine using arrays provided LEFT to RIGHT (historical human order).
-    /// </summary>
-    /// <remarks>
-    /// Order: supply rotors, ring settings, and positions from left (slow) to right (fast),
-    /// matching common documentation. This method reverses them internally to the machine's
-    /// right-to-left processing order.
-    /// Constraints: exactly three items per array (Enigma I) and all characters must be in A–Z.
-    /// </remarks>
+        /// <summary>
+        /// Creates an Enigma I machine using arrays provided LEFT to RIGHT (historical human order).
+        /// </summary>
+        /// <remarks>
+        /// Order: supply rotors, ring settings, and positions from left (slow) to right (fast),
+        /// matching common documentation. This method reverses them internally to the machine's
+        /// right-to-left processing order.
+        /// Constraints: exactly three items per array (Enigma I) and all characters must be in A–Z.
+        /// </remarks>
         /// <param name="typesLeftToRight">Rotor types from left (slow) to right (fast).</param>
         /// <param name="ringSettingsLeftToRight">Ring settings from left to right.</param>
         /// <param name="initialPositionsLeftToRight">Initial positions from left to right.</param>

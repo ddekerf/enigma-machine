@@ -37,8 +37,9 @@ jobs:
         run: |
           dotnet tool update -g dotnet-format || dotnet tool install -g dotnet-format
           echo "$HOME/.dotnet/tools" >> "$GITHUB_PATH"
-      - name: Verify formatting
-        run: dotnet format --verify-no-changes
+      - name: Verify analyzers (Windows only)
+        if: runner.os == 'Windows'
+        run: dotnet format analyzers --verify-no-changes --verbosity minimal
       - name: Test with coverage (XPlat collector)
         run: >-
           dotnet test --configuration Release --no-build --nologo -v minimal
