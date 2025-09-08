@@ -35,11 +35,58 @@ namespace EnigmaMachine.Domain.Entities
         /// <returns>The resulting letter after processing.</returns>
         public Letter ProcessLetter(Letter input)
         {
-            // Implementation of letter processing logic goes here.
-            // This will involve passing the letter through the plugboard,
-            // rotors, and reflector in sequence.
+            if (input == null)
+            {
+                throw new ArgumentNullException(nameof(input));
+            }
 
-            throw new NotImplementedException();
+            // Initial plugboard transformation
+            var signal = _plugboard.Transform(input).Character;
+
+            // Forward pass through the rotors
+            foreach (var rotor in _rotors)
+            {
+                signal = rotor.ProcessLetter(signal);
+            }
+
+            // Reflect the signal
+            signal = _reflector.Reflect(signal);
+
+            // Reverse pass through the rotors
+            for (int i = _rotors.Count - 1; i >= 0; i--)
+            {
+                signal = _rotors[i].ProcessLetter(signal);
+            }
+
+            // Final plugboard transformation
+            var output = _plugboard.Transform(new Letter(signal));
+
+            // Rotate rotors for the next letter
+            StepRotors();
+
+            return output;
+        }
+
+        private void StepRotors()
+        {
+            if (_rotors.Count == 0)
+            {
+                return;
+            }
+
+            _rotors[0].Rotate();
+
+            for (int i = 0; i < _rotors.Count - 1; i++)
+            {
+                if (_rotors[i].Position % 26 == 0)
+                {
+                    _rotors[i + 1].Rotate();
+                }
+                else
+                {
+                    break;
+                }
+            }
         }
 
         // Additional methods for managing the state of the machine can be added here.
