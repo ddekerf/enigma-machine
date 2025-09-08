@@ -25,7 +25,7 @@ namespace EnigmaMachine.Domain.ValueObjects
                 throw new ArgumentException("Character must be a letter.", nameof(character));
             }
 
-            Character = char.ToUpper(character);
+            Character = char.ToUpperInvariant(character);
         }
 
         /// <summary>

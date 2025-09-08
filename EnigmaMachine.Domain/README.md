@@ -2,7 +2,7 @@
 
 Core domain logic for simulating the WWII Enigma machine. This library follows Clean Architecture/DDD principles and contains only business logic (no UI/infrastructure).
 
-Target framework: .NET 6.0
+Target framework: .NET 8.0
 
 ## Project structure
 
@@ -70,7 +70,8 @@ var cipher = sb.ToString();
 ```
 
 Notes:
-- `EnigmaMachineFactory.CreateEnigmaI` expects parameters for rotors/rings/positions in right‑to‑left order (fast/rightmost first). The example reverses left‑to‑right strings to match this.
+- `EnigmaMachineFactory.CreateEnigmaI` expects parameters for rotors/rings/positions in right–to–left order (fast/rightmost first).
+- Prefer `CreateEnigmaILeftToRight` to pass arrays in human/historical order (left/slow to right/fast); it reverses internally.
 - All processing uses uppercase internally; decrypted outputs will be uppercase.
 - Provide a proper `IReflector` (like Reflector B) for historically accurate behavior.
 

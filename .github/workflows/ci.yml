@@ -8,16 +8,27 @@ on:
 
 jobs:
   build-test:
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '8.0.x'
+          cache: true
       - name: Restore
         run: dotnet restore
       - name: Build
         run: dotnet build --configuration Release --no-restore
-      - name: Test
-        run: dotnet test --configuration Release --no-build --nologo -v minimal
+      - name: Verify formatting
+        run: dotnet tool update -g dotnet-format && dotnet format --verify-no-changes
+      - name: Test with coverage
+        run: dotnet test --configuration Release --no-build --nologo -v minimal /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura
+      - name: Publish coverage artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage
+          path: '**/TestResults/**/*.cobertura.xml'

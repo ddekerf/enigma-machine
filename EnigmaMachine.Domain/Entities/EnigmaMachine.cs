@@ -9,9 +9,15 @@ namespace EnigmaMachine.Domain.Entities
     /// <summary>
     /// Represents the Enigma machine as the aggregate root.
     /// </summary>
-    public class EnigmaMachine : IEnigmaMachine
+    /// <remarks>
+    /// Thread-safety: This type is stateful (rotor positions change per processed letter)
+    /// and is not thread-safe. Use a separate instance per concurrent operation
+    /// or provide external synchronization. To duplicate state, construct a new instance
+    /// with the same configuration and positions.
+    /// </remarks>
+    public sealed class EnigmaMachine : IEnigmaMachine, IDiagnosticEnigmaMachine
     {
-        private readonly List<IRotor> _rotors;
+    private readonly IRotor[] _rotors;
         private readonly IPlugboard _plugboard;
         private readonly IReflector _reflector;
 
@@ -23,7 +29,8 @@ namespace EnigmaMachine.Domain.Entities
         /// <param name="reflector">The reflector component of the machine.</param>
         public EnigmaMachine(List<IRotor> rotors, IPlugboard plugboard, IReflector reflector)
         {
-            _rotors = rotors ?? throw new ArgumentNullException(nameof(rotors));
+            if (rotors == null) throw new ArgumentNullException(nameof(rotors));
+            _rotors = rotors.ToArray(); // defensive copy to avoid external mutation
             _plugboard = plugboard ?? throw new ArgumentNullException(nameof(plugboard));
             _reflector = reflector ?? throw new ArgumentNullException(nameof(reflector));
         }
@@ -56,7 +63,7 @@ namespace EnigmaMachine.Domain.Entities
             signal = _reflector.Reflect(signal);
 
             // Reverse pass through the rotors (left to right)
-            for (int i = _rotors.Count - 1; i >= 0; i--)
+            for (int i = _rotors.Length - 1; i >= 0; i--)
             {
                 signal = _rotors[i].ProcessBackward(signal);
             }
@@ -71,14 +78,14 @@ namespace EnigmaMachine.Domain.Entities
 
         private void StepRotors()
         {
-            if (_rotors.Count == 0)
+            if (_rotors.Length == 0)
             {
                 return;
             }
 
             // Capture notch state before any rotation (required for double-stepping)
-            var atNotchBefore = new bool[_rotors.Count];
-            for (int i = 0; i < _rotors.Count; i++)
+            var atNotchBefore = new bool[_rotors.Length];
+            for (int i = 0; i < _rotors.Length; i++)
             {
                 atNotchBefore[i] = _rotors[i].IsAtNotch;
             }
@@ -92,10 +99,10 @@ namespace EnigmaMachine.Domain.Entities
             // - The leftmost rotor rotates ONLY if the middle rotor was at notch (carry).
             // - For more than 3 rotors, generalize: rotor i rotates if rotor i-1 was at notch;
             //   additionally, a rotor rotates if it itself was at notch, except for the last (leftmost) rotor.
-            for (int i = 1; i < _rotors.Count; i++)
+            for (int i = 1; i < _rotors.Length; i++)
             {
                 bool carryFromRight = atNotchBefore[i - 1];
-                bool selfDoubleStep = i < _rotors.Count - 1 && atNotchBefore[i];
+                bool selfDoubleStep = i < _rotors.Length - 1 && atNotchBefore[i];
                 if (carryFromRight || selfDoubleStep)
                 {
                     _rotors[i].Rotate();
@@ -103,6 +110,18 @@ namespace EnigmaMachine.Domain.Entities
             }
         }
 
-        // Additional methods for managing the state of the machine can be added here.
+        // IDiagnosticEnigmaMachine
+        public IReadOnlyList<int> RotorPositions
+        {
+            get
+            {
+                var arr = new int[_rotors.Length];
+                for (int i = 0; i < _rotors.Length; i++)
+                {
+                    arr[i] = _rotors[i].Position;
+                }
+                return arr;
+            }
+        }
     }
 }

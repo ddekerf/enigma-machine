@@ -1,0 +1,12 @@
+root = true
+
+[*.cs]
+dotnet_diagnostic.CA2007.severity = none
+# Prefer culture-invariant conversions
+# Enforced by code; add more rules as needed
+csharp_style_var_elsewhere = true:suggestion
+csharp_style_var_for_built_in_types = true:suggestion
+csharp_style_var_when_type_is_apparent = true:suggestion
+# Require file-scoped namespaces (optional; project uses block style today)
+csharp_style_namespace_declarations = block_scoped:warning
+# Treat warnings as errors is already enabled in csproj for Domain
