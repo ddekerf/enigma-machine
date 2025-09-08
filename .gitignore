@@ -1,0 +1,54 @@
+# .NET / Visual Studio build outputs
+bin/
+obj/
+
+# User-specific files
+*.user
+*.suo
+*.userprefs
+
+# Visual Studio Code settings (keep settings.json if desired)
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# Build results
+[Bb]uild/
+[Ll]ogs/
+
+# NuGet
+*.nupkg
+# Packages folder can be restored
+packages/
+# Project.lock.json (NuGet v3) is deprecated
+project.lock.json
+
+# Azure build artifacts
+*.azurepubxml
+
+# Resharper / Rider
+*.DotSettings.user
+.idea/
+
+# Temp files
+~$*
+*.tmp
+*.temp
+
+# Others
+[Tt]est[Rr]esult*/
+*.Coverage
+*.coverage*
+*.log
+
+# Generated files
+*.generated.cs
+
+# JetBrains Rider
+*.sln.iml
+
+# OS files
+.DS_Store
+Thumbs.db
