@@ -11,11 +11,13 @@ The project is organized into the following folders:
   - `Plugboard.cs`: Represents the plugboard component, managing connections between letters.
   - `Reflector.cs`: Represents the reflector component, responsible for reflecting signals.
   - `Rotor.cs`: Represents a rotor in the Enigma machine, supporting an arbitrary number of rotors and handling rotation and signal processing.
+  - `Factories`: Provides factory helpers such as `RotorFactory` and `EnigmaMachineFactory` for configuring historical machines.
 
 - **ValueObjects**: Contains value objects that represent immutable concepts within the domain.
   - `Letter.cs`: Represents a single letter in the encryption process.
   - `PlugboardPair.cs`: Represents a pair of letters connected in the plugboard.
   - `RotorPosition.cs`: Represents the position of a rotor.
+  - `RotorType.cs`: Enumerates available historical rotor types.
 
 - **Interfaces**: Defines interfaces that abstract the behavior of the domain entities.
   - `IEnigmaMachine.cs`: Abstracts the behavior of the Enigma machine.
