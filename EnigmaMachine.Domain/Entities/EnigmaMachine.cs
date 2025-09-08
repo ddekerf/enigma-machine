@@ -74,30 +74,24 @@ namespace EnigmaMachine.Domain.Entities
                 return;
             }
 
-            // Check the notch positions before any rotation occurs.
-            var fastAtNotchBefore = _rotors[0].IsAtNotch;
-            var middleAtNotchBefore = _rotors.Count > 1 && _rotors[1].IsAtNotch;
+            // Capture notch state before any rotation (required for double-stepping)
+            var atNotchBefore = new bool[_rotors.Count];
+            for (int i = 0; i < _rotors.Count; i++)
+            {
+                atNotchBefore[i] = _rotors[i].IsAtNotch;
+            }
 
-            // The fast (right-most) rotor always rotates.
+            // Right-most (fast) rotor always rotates
             _rotors[0].Rotate();
-            _ = _rotors[0].IsAtNotch; // Check notch after rotation
 
-            // The middle rotor rotates if the fast rotor was at its notch or if it
-            // is itself at the notch (the double-stepping mechanism).
-            if (_rotors.Count > 1 && (fastAtNotchBefore || middleAtNotchBefore))
+            // Each rotor i>0 rotates if the rotor to its right was at notch, or
+            // if the rotor itself was at notch (double-stepping behavior)
+            for (int i = 1; i < _rotors.Count; i++)
             {
-                _rotors[1].Rotate();
-            }
-            if (_rotors.Count > 1)
-            {
-                _ = _rotors[1].IsAtNotch; // Check notch after rotation
-            }
-
-            // The left-most rotor rotates only when the middle rotor was at its notch
-            // before any rotation took place.
-            if (_rotors.Count > 2 && middleAtNotchBefore)
-            {
-                _rotors[2].Rotate();
+                if (atNotchBefore[i - 1] || atNotchBefore[i])
+                {
+                    _rotors[i].Rotate();
+                }
             }
         }
 
