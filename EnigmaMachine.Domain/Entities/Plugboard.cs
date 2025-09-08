@@ -8,7 +8,7 @@ namespace EnigmaMachine.Domain.Entities
     /// <summary>
     /// Represents the plugboard component of the Enigma machine.
     /// </summary>
-    public class Plugboard : IPlugboard
+    public sealed class Plugboard : IPlugboard
     {
         private const int MaxPairs = 10;
         private readonly Dictionary<char, char> _connections;
@@ -26,6 +26,12 @@ namespace EnigmaMachine.Domain.Entities
         {
             if (letter1 == letter2)
                 throw new ArgumentException("Cannot connect a letter to itself.");
+
+            if (!char.IsLetter(letter1) || !char.IsLetter(letter2))
+                throw new ArgumentException("Only letters A-Z are allowed.");
+
+            letter1 = char.ToUpperInvariant(letter1);
+            letter2 = char.ToUpperInvariant(letter2);
 
             if (_connections.ContainsKey(letter1))
                 throw new InvalidOperationException($"Letter '{letter1}' is already connected to '{_connections[letter1]}'.");
@@ -51,11 +57,14 @@ namespace EnigmaMachine.Domain.Entities
 
         private char GetConnectedLetter(char letter)
         {
+            if (!char.IsLetter(letter))
+                throw new ArgumentException("Only letters A-Z are allowed.");
+            letter = char.ToUpperInvariant(letter);
             return _connections.TryGetValue(letter, out var connectedLetter) ? connectedLetter : letter;
         }
 
         // IPlugboard implementation
-        public void Connect(PlugboardPair pair)
+    public void Connect(PlugboardPair pair)
         {
             ConnectInternal(pair.FirstLetter, pair.SecondLetter);
         }
@@ -65,7 +74,7 @@ namespace EnigmaMachine.Domain.Entities
             DisconnectInternal(pair.FirstLetter, pair.SecondLetter);
         }
 
-        public Letter Transform(Letter letter)
+    public Letter Transform(Letter letter)
         {
             var transformed = GetConnectedLetter(letter.Character);
             return new Letter(transformed);

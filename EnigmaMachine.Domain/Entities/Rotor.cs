@@ -8,7 +8,7 @@ namespace EnigmaMachine.Domain.Entities
     /// Represents a rotor in the Enigma machine.
     /// Stores wiring, ring setting, turnover notch and current position.
     /// </summary>
-    public class Rotor : IRotor
+    public sealed class Rotor : IRotor
     {
         private readonly int[] _forwardMapping;
         private readonly int[] _reverseMapping;
@@ -25,9 +25,22 @@ namespace EnigmaMachine.Domain.Entities
         /// <param name="initialPosition">The initial rotor position character.</param>
         public Rotor(string wiring, char notch, char ringSetting, char initialPosition)
         {
-            if (wiring == null || wiring.Length != 26)
-            {
+            if (string.IsNullOrWhiteSpace(wiring) || wiring.Length != 26)
                 throw new ArgumentException("Wiring must be 26 characters long", nameof(wiring));
+
+            wiring = wiring.ToUpperInvariant();
+
+            // Ensure wiring contains only A-Z and all letters are unique
+            var seen = new bool[26];
+            for (int i = 0; i < 26; i++)
+            {
+                char ch = wiring[i];
+                if (ch < 'A' || ch > 'Z')
+                    throw new ArgumentException("Wiring must contain only A-Z letters", nameof(wiring));
+                int idx = ch - 'A';
+                if (seen[idx])
+                    throw new ArgumentException("Wiring must map each letter exactly once (no duplicates)", nameof(wiring));
+                seen[idx] = true;
             }
 
             _forwardMapping = new int[26];
@@ -39,6 +52,11 @@ namespace EnigmaMachine.Domain.Entities
                 _reverseMapping[mapped] = i;
             }
 
+            // Validate inputs are uppercase letters
+            if (notch < 'A' || notch > 'Z') throw new ArgumentOutOfRangeException(nameof(notch));
+            if (ringSetting < 'A' || ringSetting > 'Z') throw new ArgumentOutOfRangeException(nameof(ringSetting));
+            if (initialPosition < 'A' || initialPosition > 'Z') throw new ArgumentOutOfRangeException(nameof(initialPosition));
+
             _notch = notch - 'A';
             _ringSetting = ringSetting - 'A';
             _position = initialPosition - 'A';
@@ -46,9 +64,6 @@ namespace EnigmaMachine.Domain.Entities
 
         /// <inheritdoc />
         public int Position => _position;
-
-        /// <inheritdoc />
-    public bool AtNotch => _position == _notch;
 
     /// <inheritdoc />
     public bool IsAtNotch => _position == _notch;
@@ -64,6 +79,7 @@ namespace EnigmaMachine.Domain.Entities
         {
             // Convert to 0-25 range
             int c = input - 'A';
+            if (c < 0 || c > 25) throw new ArgumentOutOfRangeException(nameof(input), "Expected uppercase A-Z");
 
             // Adjust for rotor position and ring setting
             int stepped = (c + _position - _ringSetting + 26) % 26;
@@ -76,6 +92,7 @@ namespace EnigmaMachine.Domain.Entities
         public char ProcessBackward(char input)
         {
             int c = input - 'A';
+            if (c < 0 || c > 25) throw new ArgumentOutOfRangeException(nameof(input), "Expected uppercase A-Z");
             int stepped = (c + _position - _ringSetting + 26) % 26;
             int mapped = _reverseMapping[stepped];
             int result = (mapped - _position + _ringSetting + 26) % 26;

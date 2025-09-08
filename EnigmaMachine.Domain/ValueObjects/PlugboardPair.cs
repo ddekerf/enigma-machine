@@ -7,7 +7,7 @@ namespace EnigmaMachine.Domain.ValueObjects
     /// <summary>
     /// Represents a pair of letters connected in the plugboard.
     /// </summary>
-    public class PlugboardPair
+    public sealed class PlugboardPair
     {
         /// <summary>
         /// Gets the first letter of the pair.
@@ -26,6 +26,15 @@ namespace EnigmaMachine.Domain.ValueObjects
         /// <param name="secondLetter">The second letter of the pair.</param>
         public PlugboardPair(char firstLetter, char secondLetter)
         {
+            if (!char.IsLetter(firstLetter) || !char.IsLetter(secondLetter))
+                throw new ArgumentException("Plugboard pairs must be letters A-Z");
+
+            firstLetter = char.ToUpperInvariant(firstLetter);
+            secondLetter = char.ToUpperInvariant(secondLetter);
+
+            if (firstLetter == secondLetter)
+                throw new ArgumentException("Plugboard cannot connect a letter to itself.");
+
             FirstLetter = firstLetter;
             SecondLetter = secondLetter;
         }
@@ -35,11 +44,15 @@ namespace EnigmaMachine.Domain.ValueObjects
         /// </summary>
         /// <param name="obj">The <see cref="object"/> to compare with the current <see cref="PlugboardPair"/>.</param>
         /// <returns>true if the specified <see cref="object"/> is equal to the current <see cref="PlugboardPair"/>; otherwise, false.</returns>
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
-            return obj is PlugboardPair pair &&
-                   FirstLetter == pair.FirstLetter &&
-                   SecondLetter == pair.SecondLetter;
+            return obj is PlugboardPair pair && Equals(pair);
+        }
+
+        public bool Equals(PlugboardPair? other)
+        {
+            if (other is null) return false;
+            return FirstLetter == other.FirstLetter && SecondLetter == other.SecondLetter;
         }
 
         /// <summary>

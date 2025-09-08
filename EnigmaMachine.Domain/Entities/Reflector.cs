@@ -5,20 +5,19 @@ using EnigmaMachine.Domain.Interfaces;
 namespace EnigmaMachine.Domain.Entities
 {
     /// <summary>
-    /// Represents the reflector component of the Enigma machine.
+    /// Concrete Reflector B using historical wiring YRUHQSLDPXNGOKMIEBFZCWVJAT.
+    /// This wiring is an involution (mapping is symmetric) and has no self-mappings.
     /// </summary>
-    public class Reflector : IReflector
+    public sealed class ReflectorB : IReflector
     {
-        /// <summary>
-        /// Reflects the input signal based on the reflector's wiring.
-        /// </summary>
-        /// <param name="input">The input signal to reflect.</param>
-        /// <returns>The reflected signal.</returns>
+        private const string Wiring = "YRUHQSLDPXNGOKMIEBFZCWVJAT";
+
         public char Reflect(char input)
         {
-            // Implementation of reflection logic goes here.
-            // This is a placeholder for the actual reflection logic.
-            return input; // Placeholder return
+            if (input < 'A' || input > 'Z')
+                throw new ArgumentOutOfRangeException(nameof(input), "Reflector expects uppercase A-Z");
+
+            return Wiring[input - 'A'];
         }
     }
 }

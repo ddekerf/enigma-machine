@@ -9,11 +9,11 @@ namespace EnigmaMachine.Domain.Entities
     /// <summary>
     /// Represents the Enigma machine as the aggregate root.
     /// </summary>
-    public class EnigmaMachine
+    public class EnigmaMachine : IEnigmaMachine
     {
         private readonly List<IRotor> _rotors;
-        private IPlugboard _plugboard;
-        private IReflector _reflector;
+        private readonly IPlugboard _plugboard;
+        private readonly IReflector _reflector;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EnigmaMachine"/> class.
@@ -33,7 +33,7 @@ namespace EnigmaMachine.Domain.Entities
         /// </summary>
         /// <param name="input">The input letter to be processed.</param>
         /// <returns>The resulting letter after processing.</returns>
-        public Letter ProcessLetter(Letter input)
+    public Letter ProcessLetter(Letter input)
         {
             if (input == null)
             {
@@ -67,6 +67,15 @@ namespace EnigmaMachine.Domain.Entities
             return output;
         }
 
+    // IEnigmaMachine implementation
+    public Letter Encrypt(Letter input) => ProcessLetter(input);
+
+    public void ConfigureRotors(IRotor[] rotors) => throw new NotSupportedException("Rotors are configured via constructor/factory.");
+
+    public void ConfigurePlugboard(IPlugboard plugboard) => throw new NotSupportedException("Plugboard is configured via constructor/factory.");
+
+    public void Reset() => throw new NotSupportedException("Reset is not supported as stateful rotor positions are advanced during processing.");
+
         private void StepRotors()
         {
             if (_rotors.Count == 0)
@@ -84,11 +93,17 @@ namespace EnigmaMachine.Domain.Entities
             // Right-most (fast) rotor always rotates
             _rotors[0].Rotate();
 
-            // Each rotor i>0 rotates if the rotor to its right was at notch, or
-            // if the rotor itself was at notch (double-stepping behavior)
+            // Apply historical stepping rules:
+            // - The middle rotor rotates if the right rotor was at notch (carry)
+            //   OR if the middle rotor itself was at notch (double-step scenario).
+            // - The leftmost rotor rotates ONLY if the middle rotor was at notch (carry).
+            // - For more than 3 rotors, generalize: rotor i rotates if rotor i-1 was at notch;
+            //   additionally, a rotor rotates if it itself was at notch, except for the last (leftmost) rotor.
             for (int i = 1; i < _rotors.Count; i++)
             {
-                if (atNotchBefore[i - 1] || atNotchBefore[i])
+                bool carryFromRight = atNotchBefore[i - 1];
+                bool selfDoubleStep = i < _rotors.Count - 1 && atNotchBefore[i];
+                if (carryFromRight || selfDoubleStep)
                 {
                     _rotors[i].Rotate();
                 }

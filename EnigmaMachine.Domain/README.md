@@ -9,7 +9,7 @@ Target framework: .NET 6.0
 - Entities
   - `EnigmaMachine.cs` – Aggregate root that wires plugboard, rotors, and reflector, including double‑stepping rotor logic and processing order.
   - `Plugboard.cs` – Manages letter swaps and exposes connections.
-  - `Reflector.cs` – Minimal placeholder reflector; provide a concrete wiring (e.g., Reflector B) via `IReflector` for real use.
+  - `Reflector.cs` – `ReflectorB` implementation using historical wiring (YRUHQSLDPXNGOKMIEBFZCWVJAT).
   - `Rotor.cs` – Rotor implementation with forward and reverse paths, ring settings, positions, and notch.
 - Factories
   - `EnigmaMachineFactory.cs` – Builds a configured Enigma I using three rotors and provided plugboard/reflector.
@@ -31,7 +31,7 @@ Target framework: .NET 6.0
 
 ## Quick start
 
-Add a reference to this project from your application or tests, then assemble a machine. Example with Reflector B wiring and a few plugboard pairs:
+Add a reference to this project from your application or tests, then assemble a machine. Example with `ReflectorB` and a few plugboard pairs:
 
 ```csharp
 using EnigmaMachine.Domain.Entities;
@@ -40,11 +40,7 @@ using EnigmaMachine.Domain.Interfaces;
 using EnigmaMachine.Domain.ValueObjects;
 
 // Simple Reflector B implementation (historical wiring)
-class ReflectorB : IReflector
-{
-    private const string Wiring = "YRUHQSLDPXNGOKMIEBFZCWVJAT";
-    public char Reflect(char input) => Wiring[input - 'A'];
-}
+var reflector = new ReflectorB();
 
 // Build a plugboard from pairs
 var plugboard = new Plugboard();
@@ -56,11 +52,11 @@ foreach (var pair in new[] { "BA", "QU", "CG" })
 // Create Enigma I with three rotors (left→right in call),
 // ring settings and start positions as strings (A–Z)
 var machine = EnigmaMachineFactory.CreateEnigmaI(
-    new[] { RotorType.I, RotorType.III, RotorType.V },
-    rings: "XYZ".ToCharArray().Reverse().ToArray(),
-    initialPositions: "ABC".ToCharArray().Reverse().ToArray(),
-    plugboard,
-    reflector: new ReflectorB());
+  new[] { RotorType.I, RotorType.III, RotorType.V },
+  ringSettings: "XYZ".ToCharArray().Reverse().ToArray(),
+  initialPositions: "ABC".ToCharArray().Reverse().ToArray(),
+  plugboard,
+  reflector);
 
 // Process data (output is uppercase)
 string input = "HelloHowAreYou";
@@ -74,7 +70,7 @@ var cipher = sb.ToString();
 ```
 
 Notes:
-- `EnigmaMachineFactory.CreateEnigmaI` expects parameters for rotors/rings/positions in right‑to‑left order. The example reverses left‑to‑right strings to match this.
+- `EnigmaMachineFactory.CreateEnigmaI` expects parameters for rotors/rings/positions in right‑to‑left order (fast/rightmost first). The example reverses left‑to‑right strings to match this.
 - All processing uses uppercase internally; decrypted outputs will be uppercase.
 - Provide a proper `IReflector` (like Reflector B) for historically accurate behavior.
 
