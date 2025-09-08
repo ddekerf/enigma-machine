@@ -1,37 +1,19 @@
 // IEnigmaMachine.cs
-using System;
-using System.Collections.Generic;
 using EnigmaMachine.Domain.ValueObjects;
 
 namespace EnigmaMachine.Domain.Interfaces
 {
     /// <summary>
-    /// Defines the interface for the Enigma machine, abstracting its behavior.
+    /// Minimal contract for an Enigma machine: process a single letter with current state.
+    /// Configuration is provided externally (e.g., via factory/constructor).
     /// </summary>
     public interface IEnigmaMachine
     {
         /// <summary>
-        /// Encrypts the given letter using the Enigma machine's configuration.
+        /// Encrypts/decrypts a single letter, advancing rotor state appropriately.
         /// </summary>
-        /// <param name="input">The letter to encrypt.</param>
-        /// <returns>The encrypted letter.</returns>
-        Letter Encrypt(Letter input);
-
-        /// <summary>
-        /// Configures the rotors of the Enigma machine.
-        /// </summary>
-        /// <param name="rotors">An array of rotors to configure.</param>
-        void ConfigureRotors(IRotor[] rotors);
-
-        /// <summary>
-        /// Configures the plugboard of the Enigma machine.
-        /// </summary>
-        /// <param name="plugboard">The plugboard to configure.</param>
-        void ConfigurePlugboard(IPlugboard plugboard);
-
-        /// <summary>
-        /// Resets the Enigma machine to its initial state.
-        /// </summary>
-        void Reset();
+        /// <param name="input">The input letter (A-Z).</param>
+        /// <returns>The processed letter.</returns>
+        Letter ProcessLetter(Letter input);
     }
 }

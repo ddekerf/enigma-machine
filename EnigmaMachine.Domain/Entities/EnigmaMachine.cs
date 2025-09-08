@@ -67,14 +67,7 @@ namespace EnigmaMachine.Domain.Entities
             return output;
         }
 
-    // IEnigmaMachine implementation
-    public Letter Encrypt(Letter input) => ProcessLetter(input);
-
-    public void ConfigureRotors(IRotor[] rotors) => throw new NotSupportedException("Rotors are configured via constructor/factory.");
-
-    public void ConfigurePlugboard(IPlugboard plugboard) => throw new NotSupportedException("Plugboard is configured via constructor/factory.");
-
-    public void Reset() => throw new NotSupportedException("Reset is not supported as stateful rotor positions are advanced during processing.");
+    // IEnigmaMachine intentionally exposes only ProcessLetter
 
         private void StepRotors()
         {
