@@ -14,6 +14,11 @@ namespace EnigmaMachine.Domain.Interfaces
         int Position { get; }
 
         /// <summary>
+        /// Gets a value indicating whether the rotor is currently at its turnover notch.
+        /// </summary>
+        bool AtNotch { get; }
+
+        /// <summary>
         /// Rotates the rotor to the next position.
         /// </summary>
         void Rotate();

@@ -78,7 +78,7 @@ namespace EnigmaMachine.Domain.Entities
 
             for (int i = 0; i < _rotors.Count - 1; i++)
             {
-                if (_rotors[i].Position % 26 == 0)
+                if (_rotors[i].AtNotch)
                 {
                     _rotors[i + 1].Rotate();
                 }
