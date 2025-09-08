@@ -10,6 +10,7 @@ namespace EnigmaMachine.Domain.Entities
     /// </summary>
     public class Plugboard : IPlugboard
     {
+        private const int MaxPairs = 10;
         private readonly Dictionary<char, char> _connections;
 
         /// <summary>
@@ -25,6 +26,15 @@ namespace EnigmaMachine.Domain.Entities
         {
             if (letter1 == letter2)
                 throw new ArgumentException("Cannot connect a letter to itself.");
+
+            if (_connections.ContainsKey(letter1))
+                throw new InvalidOperationException($"Letter '{letter1}' is already connected to '{_connections[letter1]}'.");
+
+            if (_connections.ContainsKey(letter2))
+                throw new InvalidOperationException($"Letter '{letter2}' is already connected to '{_connections[letter2]}'.");
+
+            if (_connections.Count >= MaxPairs * 2)
+                throw new InvalidOperationException($"Plugboard can have at most {MaxPairs} pairs.");
 
             _connections[letter1] = letter2;
             _connections[letter2] = letter1;
