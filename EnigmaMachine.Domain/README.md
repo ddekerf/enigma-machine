@@ -1,38 +1,104 @@
 # EnigmaMachine.Domain
 
-The `EnigmaMachine.Domain` project is part of the `EnigmaMachine` solution, which simulates the WWII Enigma encryption device. This project adheres to Clean Architecture and Domain-Driven Design (DDD) principles, focusing solely on the core business logic of the Enigma machine.
+Core domain logic for simulating the WWII Enigma machine. This library follows Clean Architecture/DDD principles and contains only business logic (no UI/infrastructure).
 
-## Project Structure
+Target framework: .NET 6.0
 
-The project is organized into the following folders:
+## Project structure
 
-- **Entities**: Contains the core domain entities that represent the main components of the Enigma machine.
-  - `EnigmaMachine.cs`: Defines the `EnigmaMachine` class as the aggregate root, encapsulating the overall functionality of the machine.
-  - `Plugboard.cs`: Represents the plugboard component, managing connections between letters.
-  - `Reflector.cs`: Represents the reflector component, responsible for reflecting signals.
-  - `Rotor.cs`: Represents a rotor in the Enigma machine, supporting an arbitrary number of rotors and handling rotation and signal processing.
-  - `Factories`: Provides factory helpers such as `RotorFactory` and `EnigmaMachineFactory` for configuring historical machines.
+- Entities
+  - `EnigmaMachine.cs` – Aggregate root that wires plugboard, rotors, and reflector, including double‑stepping rotor logic and processing order.
+  - `Plugboard.cs` – Manages letter swaps and exposes connections.
+  - `Reflector.cs` – Minimal placeholder reflector; provide a concrete wiring (e.g., Reflector B) via `IReflector` for real use.
+  - `Rotor.cs` – Rotor implementation with forward and reverse paths, ring settings, positions, and notch.
+- Factories
+  - `EnigmaMachineFactory.cs` – Builds a configured Enigma I using three rotors and provided plugboard/reflector.
+  - `RotorFactory.cs` – Historical rotor presets (I–V) with wiring and notch.
+- ValueObjects
+  - `Letter.cs`, `PlugboardPair.cs`, `RotorPosition.cs`, `RotorType.cs`.
+- Interfaces
+  - `IEnigmaMachine.cs`, `IPlugboard.cs`, `IReflector.cs`, `IRotor.cs`.
+- Exceptions
+  - `DomainException.cs`.
 
-- **ValueObjects**: Contains value objects that represent immutable concepts within the domain.
-  - `Letter.cs`: Represents a single letter in the encryption process.
-  - `PlugboardPair.cs`: Represents a pair of letters connected in the plugboard.
-  - `RotorPosition.cs`: Represents the position of a rotor.
-  - `RotorType.cs`: Enumerates available historical rotor types.
+## Features
 
-- **Interfaces**: Defines interfaces that abstract the behavior of the domain entities.
-  - `IEnigmaMachine.cs`: Abstracts the behavior of the Enigma machine.
-  - `IPlugboard.cs`: Abstracts the behavior of the plugboard.
-  - `IRotor.cs`: Abstracts the behavior of a rotor.
+- Historical rotor presets I–V (wiring + notch).
+- Correct Enigma stepping: rotors step before encoding, with middle rotor double‑stepping behavior.
+- Forward and reverse rotor traversal around a reflector.
+- Plugboard swaps pre‑ and post‑processing.
+- Input normalized via `Letter` (letters only) and machine output in uppercase A–Z.
 
-- **Exceptions**: Contains domain-specific exceptions.
-  - `DomainException.cs`: Represents exceptions that may occur within the domain layer.
+## Quick start
 
-## Purpose
+Add a reference to this project from your application or tests, then assemble a machine. Example with Reflector B wiring and a few plugboard pairs:
 
-The purpose of the `EnigmaMachine.Domain` project is to encapsulate the business logic related to the Enigma machine, ensuring that it remains isolated and testable. By adhering to DDD principles, the project aims to provide a clear and maintainable structure that can be easily extended in the future.
+```csharp
+using EnigmaMachine.Domain.Entities;
+using EnigmaMachine.Domain.Factories;
+using EnigmaMachine.Domain.Interfaces;
+using EnigmaMachine.Domain.ValueObjects;
 
-## Getting Started
+// Simple Reflector B implementation (historical wiring)
+class ReflectorB : IReflector
+{
+    private const string Wiring = "YRUHQSLDPXNGOKMIEBFZCWVJAT";
+    public char Reflect(char input) => Wiring[input - 'A'];
+}
 
-To get started with the `EnigmaMachine.Domain` project, ensure that you have the necessary .NET SDK installed. You can build and run the project using standard .NET CLI commands.
+// Build a plugboard from pairs
+var plugboard = new Plugboard();
+foreach (var pair in new[] { "BA", "QU", "CG" })
+{
+    plugboard.Connect(new PlugboardPair(pair[0], pair[1]));
+}
 
-This project does not include any infrastructure or UI code, focusing solely on the domain layer to maintain a clean separation of concerns.
+// Create Enigma I with three rotors (left→right in call),
+// ring settings and start positions as strings (A–Z)
+var machine = EnigmaMachineFactory.CreateEnigmaI(
+    new[] { RotorType.I, RotorType.III, RotorType.V },
+    rings: "XYZ".ToCharArray().Reverse().ToArray(),
+    initialPositions: "ABC".ToCharArray().Reverse().ToArray(),
+    plugboard,
+    reflector: new ReflectorB());
+
+// Process data (output is uppercase)
+string input = "HelloHowAreYou";
+var sb = new StringBuilder();
+foreach (var ch in input)
+{
+    var letter = new Letter(ch);
+    sb.Append(machine.ProcessLetter(letter).Character);
+}
+var cipher = sb.ToString();
+```
+
+Notes:
+- `EnigmaMachineFactory.CreateEnigmaI` expects parameters for rotors/rings/positions in right‑to‑left order. The example reverses left‑to‑right strings to match this.
+- All processing uses uppercase internally; decrypted outputs will be uppercase.
+- Provide a proper `IReflector` (like Reflector B) for historically accurate behavior.
+
+## Tests
+
+Unit tests live in `EnigmaMachine.Domain.Tests` and cover multiple rotor/ring/position combinations (including decrypt/round‑trip cases).
+
+Run from the repo root:
+
+```powershell
+dotnet test --nologo -v minimal
+```
+
+## Implementation details
+
+- Rotor stepping occurs before encoding each letter; middle rotor double‑steps when at notch or when the right rotor was at its notch.
+- Rotors implement both `ProcessLetter` (forward) and `ProcessBackward` (reverse) paths.
+- `RotorFactory` wiring and notch positions:
+  - I:  EKMFLGDQVZNTOWYHXUSPAIBRCJ (notch Q)
+  - II: AJDKSIRUXBLHWTMCQGZNPYFVOE (notch E)
+  - III: BDFHJLCPRTXVZNYEIWGAKMUSQO (notch V)
+  - IV: ESOVPZJAYQUIRHXLNFTGKDCMWB (notch J)
+  - V:  VZBRGITYUPSDNHLXAWMJQOFECK (notch Z)
+
+## Scope
+
+This project is the domain layer only. Add UI, CLI, or persistence in separate projects to keep concerns separated.
