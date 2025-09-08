@@ -51,6 +51,9 @@ namespace EnigmaMachine.Domain.Entities
         public bool AtNotch => _position == _notch;
 
         /// <inheritdoc />
+        public bool IsAtNotch => (_position.Position + 1) % 26 == 0;
+
+        /// <inheritdoc />
         public void Rotate()
         {
             _position = (_position + 1) % 26;
