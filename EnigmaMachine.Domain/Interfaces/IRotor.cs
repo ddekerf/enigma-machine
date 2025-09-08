@@ -14,6 +14,13 @@ namespace EnigmaMachine.Domain.Interfaces
         int Position { get; }
 
         /// <summary>
+        /// Gets a value indicating whether the rotor is currently positioned at
+        /// its notch. When at the notch, the rotor triggers the rotation of the
+        /// rotor to its left on the next key press.
+        /// </summary>
+        bool IsAtNotch { get; }
+
+        /// <summary>
         /// Rotates the rotor to the next position.
         /// </summary>
         void Rotate();
