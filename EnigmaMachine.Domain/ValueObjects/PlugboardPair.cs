@@ -35,6 +35,12 @@ namespace EnigmaMachine.Domain.ValueObjects
             if (firstLetter == secondLetter)
                 throw new ArgumentException("Plugboard cannot connect a letter to itself.");
 
+            // Normalize ordering so that (A,B) is considered equal to (B,A)
+            if (firstLetter > secondLetter)
+            {
+                (firstLetter, secondLetter) = (secondLetter, firstLetter);
+            }
+
             FirstLetter = firstLetter;
             SecondLetter = secondLetter;
         }
