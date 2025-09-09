@@ -30,6 +30,20 @@ namespace EnigmaMachine.Domain.Entities
         public EnigmaMachine(List<IRotor> rotors, IPlugboard plugboard, IReflector reflector)
         {
             if (rotors == null) throw new ArgumentNullException(nameof(rotors));
+            if (rotors.Count == 0)
+            {
+                throw new ArgumentException("At least one rotor is required.", nameof(rotors));
+            }
+
+            // Validate that no rotor entry is null
+            for (int i = 0; i < rotors.Count; i++)
+            {
+                if (rotors[i] is null)
+                {
+                    throw new ArgumentException($"Rotor at index {i} is null.", nameof(rotors));
+                }
+            }
+
             _rotors = rotors.ToArray(); // defensive copy to avoid external mutation
             _plugboard = plugboard ?? throw new ArgumentNullException(nameof(plugboard));
             _reflector = reflector ?? throw new ArgumentNullException(nameof(reflector));
