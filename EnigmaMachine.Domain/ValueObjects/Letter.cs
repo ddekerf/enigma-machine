@@ -14,7 +14,7 @@ namespace EnigmaMachine.Domain.ValueObjects
         public char Character { get; init; }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Letter"/> struct.
+        /// Initializes a new instance of the <see cref="Letter"/> record struct.
         /// </summary>
         /// <param name="character">The character representing the letter.</param>
         /// <exception cref="ArgumentException">Thrown when the character is not a valid letter.</exception>
