@@ -18,7 +18,7 @@ namespace EnigmaMachine.Domain.ValueObjects
         /// </summary>
         /// <param name="character">The character representing the letter.</param>
         /// <exception cref="ArgumentException">Thrown when the character is not a valid letter.</exception>
-        public Letter(char character) : this()
+        public Letter(char character)
         {
             if (!char.IsLetter(character))
             {
