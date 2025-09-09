@@ -132,5 +132,18 @@ namespace EnigmaMachine.Domain.Entities
                 return arr;
             }
         }
+
+        public IReadOnlyList<RotorPosition> RotorPositionsView
+        {
+            get
+            {
+                var arr = new RotorPosition[_rotors.Length];
+                for (int i = 0; i < _rotors.Length; i++)
+                {
+                    arr[i] = new RotorPosition(_rotors[i].Position);
+                }
+                return arr;
+            }
+        }
     }
 }

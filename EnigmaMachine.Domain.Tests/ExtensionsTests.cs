@@ -90,5 +90,21 @@ namespace EnigmaMachine.Domain.Tests
             var roundTrip = m.DecodeText(cipher, t);
             Assert.Equal("HI!", roundTrip);
         }
+
+        [Fact]
+        public void Diagnostic_RotorPositionsView_Matches_Int_Positions()
+        {
+            var m = Build();
+            var diag = (IDiagnosticEnigmaMachine)m;
+            var ints = diag.RotorPositions;
+            var view = diag.RotorPositionsView;
+
+            Assert.Equal(ints.Count, view.Count);
+            for (int i = 0; i < ints.Count; i++)
+            {
+                Assert.Equal(((ints[i] % 26) + 26) % 26, view[i].Index);
+                Assert.InRange(view[i].Letter, 'A', 'Z');
+            }
+        }
     }
 }

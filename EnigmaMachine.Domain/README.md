@@ -15,9 +15,9 @@ Target framework: .NET 8.0
   - `EnigmaMachineFactory.cs` – Builds a configured Enigma I using three rotors and provided plugboard/reflector.
   - `RotorFactory.cs` – Historical rotor presets (I–V) with wiring and notch.
 - ValueObjects
-  - `Letter.cs`, `PlugboardPair.cs`, `RotorPosition.cs`, `RotorType.cs`.
+  - `Letter.cs`, `PlugboardPair.cs`, `RotorType.cs`, `RotorPosition.cs` (UI-friendly diagnostics).
 - Interfaces
-  - `IEnigmaMachine.cs`, `IPlugboard.cs`, `IReflector.cs`, `IRotor.cs`.
+  - `IEnigmaMachine.cs`, `IPlugboard.cs`, `IReflector.cs`, `IRotor.cs`, `IDiagnosticEnigmaMachine.cs`.
 - Exceptions
   - `DomainException.cs`.
 
@@ -28,6 +28,7 @@ Target framework: .NET 8.0
 - Forward and reverse rotor traversal around a reflector.
 - Plugboard swaps pre‑ and post‑processing.
 - Input normalized via `Letter` (letters only) and machine output in uppercase A–Z.
+ - Diagnostics interface exposes rotor positions as both integers and `RotorPosition` value objects for UI rendering.
 
 ## Quick start
 
@@ -74,6 +75,7 @@ Notes:
 - Prefer `CreateEnigmaILeftToRight` to pass arrays in human/historical order (left/slow to right/fast); it reverses internally.
 - All processing uses uppercase internally; decrypted outputs will be uppercase.
 - Provide a proper `IReflector` (like Reflector B) for historically accurate behavior.
+ - Constructor validation: EnigmaMachine requires at least one rotor and rejects null entries in the rotor list.
 
 ## Tests
 
@@ -89,6 +91,9 @@ dotnet test --nologo -v minimal
 
 - Rotor stepping occurs before encoding each letter; middle rotor double‑steps when at notch or when the right rotor was at its notch.
 - Rotors implement both `ProcessLetter` (forward) and `ProcessBackward` (reverse) paths.
+ - `IDiagnosticEnigmaMachine`:
+   - `IReadOnlyList<int> RotorPositions` – 0–25 indices; index 0 is the rightmost (fast) rotor.
+   - `IReadOnlyList<RotorPosition> RotorPositionsView` – UI-friendly positions with A–Z letters.
 - `RotorFactory` wiring and notch positions:
   - I:  EKMFLGDQVZNTOWYHXUSPAIBRCJ (notch Q)
   - II: AJDKSIRUXBLHWTMCQGZNPYFVOE (notch E)
