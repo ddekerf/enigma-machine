@@ -42,11 +42,6 @@ namespace EnigmaMachine.Domain.Entities
         /// <returns>The resulting letter after processing.</returns>
         public Letter ProcessLetter(Letter input)
         {
-            if (input == null)
-            {
-                throw new ArgumentNullException(nameof(input));
-            }
-
             // Step rotors before processing (Enigma stepping occurs prior to encoding)
             StepRotors();
 
