@@ -77,25 +77,25 @@ namespace EnigmaMachine.Domain.Entities
         /// <inheritdoc />
         public char ProcessLetter(char input)
         {
-            // Convert to 0-25 range
             int c = input - 'A';
-            if (c < 0 || c > 25) throw new ArgumentOutOfRangeException(nameof(input), "Expected uppercase A-Z");
+            if ((uint)c > 25) throw new ArgumentOutOfRangeException(nameof(input), "Expected uppercase A-Z");
 
-            // Adjust for rotor position and ring setting
-            int stepped = (c + _position - _ringSetting + 26) % 26;
+            int s = (_position - _ringSetting + 26) % 26; // netto verschuiving
+            int stepped = (c + s) % 26;
             int mapped = _forwardMapping[stepped];
-            int result = (mapped - _position + _ringSetting + 26) % 26;
+            int result = (mapped - s + 26) % 26;
             return (char)(result + 'A');
         }
 
-        /// <inheritdoc />
         public char ProcessBackward(char input)
         {
             int c = input - 'A';
-            if (c < 0 || c > 25) throw new ArgumentOutOfRangeException(nameof(input), "Expected uppercase A-Z");
-            int stepped = (c + _position - _ringSetting + 26) % 26;
+            if ((uint)c > 25) throw new ArgumentOutOfRangeException(nameof(input), "Expected uppercase A-Z");
+
+            int s = (_position - _ringSetting + 26) % 26;
+            int stepped = (c + s) % 26;
             int mapped = _reverseMapping[stepped];
-            int result = (mapped - _position + _ringSetting + 26) % 26;
+            int result = (mapped - s + 26) % 26;
             return (char)(result + 'A');
         }
     }
