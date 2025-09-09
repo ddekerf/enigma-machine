@@ -6,19 +6,19 @@ namespace EnigmaMachine.Domain.ValueObjects
     /// <summary>
     /// Represents a single letter in the encryption process.
     /// </summary>
-    public class Letter
+    public readonly record struct Letter
     {
         /// <summary>
         /// Gets the character representing the letter.
         /// </summary>
-        public char Character { get; }
+        public char Character { get; init; }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Letter"/> class.
+        /// Initializes a new instance of the <see cref="Letter"/> struct.
         /// </summary>
         /// <param name="character">The character representing the letter.</param>
         /// <exception cref="ArgumentException">Thrown when the character is not a valid letter.</exception>
-        public Letter(char character)
+        public Letter(char character) : this()
         {
             if (!char.IsLetter(character))
             {
@@ -36,7 +36,5 @@ namespace EnigmaMachine.Domain.ValueObjects
         {
             return Character.ToString();
         }
-
-        // Additional methods and overrides (e.g., Equals, GetHashCode) can be added as needed.
     }
 }
