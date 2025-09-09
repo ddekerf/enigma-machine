@@ -4,7 +4,10 @@ on:
   push:
     branches: [ main ]
   pull_request:
-    branches: [ main ]
+
+# Explicitly set least-privilege GITHUB_TOKEN permissions for this workflow.
+permissions:
+  contents: read
 
 jobs:
   build-test:
