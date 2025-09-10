@@ -11,5 +11,5 @@ public sealed record MachineConfiguration(
     string[]? PlugboardPairs);
 
 public sealed record ProcessTextCommand(
-    string InputText,
+    string? InputText,
     MachineConfiguration Configuration) : IRequest<ProcessTextResult>;
