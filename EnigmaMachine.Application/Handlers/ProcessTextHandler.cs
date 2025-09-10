@@ -15,11 +15,25 @@ namespace EnigmaMachine.Application.Handlers;
 
 public sealed class ProcessTextHandler : IRequestHandler<ProcessTextCommand, ProcessTextResult>
 {
+    private readonly Func<IPlugboard> _plugboardFactory;
+    private readonly Func<IReflector> _reflectorFactory;
+    private readonly Func<RotorType[], char[], char[], IPlugboard, IReflector, IEnigmaMachine> _machineFactory;
+
+    public ProcessTextHandler(
+        Func<IPlugboard> plugboardFactory,
+        Func<IReflector> reflectorFactory,
+        Func<RotorType[], char[], char[], IPlugboard, IReflector, IEnigmaMachine> machineFactory)
+    {
+        _plugboardFactory = plugboardFactory;
+        _reflectorFactory = reflectorFactory;
+        _machineFactory = machineFactory;
+    }
+
     public Task<ProcessTextResult> Handle(ProcessTextCommand request, CancellationToken cancellationToken)
     {
         var cfg = request.Configuration;
 
-        var plugboard = new Plugboard();
+        var plugboard = _plugboardFactory();
         if (cfg.PlugboardPairs != null)
         {
             foreach (var pair in cfg.PlugboardPairs)
@@ -31,8 +45,8 @@ public sealed class ProcessTextHandler : IRequestHandler<ProcessTextCommand, Pro
             }
         }
 
-        var reflector = new ReflectorB();
-        var machine = EnigmaMachineFactory.CreateEnigmaILeftToRight(
+        var reflector = _reflectorFactory();
+        var machine = _machineFactory(
             cfg.Rotors,
             cfg.RingSettings.ToUpperInvariant().ToCharArray(),
             cfg.InitialPositions.ToUpperInvariant().ToCharArray(),

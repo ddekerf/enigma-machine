@@ -8,6 +8,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EnigmaMachine.Domain.Tests"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EnigmaMachine.Application", "EnigmaMachine.Application\EnigmaMachine.Application.csproj", "{D9FB7E2D-AEA5-410A-95CD-73FAEA307F87}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EnigmaMachine.Api", "EnigmaMachine.Api\EnigmaMachine.Api.csproj", "{964A1FE4-97C5-4071-91AA-4287A7658FCD}"
+EndProject
 Global
     GlobalSection(SolutionConfigurationPlatforms) = preSolution
         Debug|Any CPU = Debug|Any CPU
@@ -26,5 +28,9 @@ Global
         {D9FB7E2D-AEA5-410A-95CD-73FAEA307F87}.Debug|Any CPU.Build.0 = Debug|Any CPU
         {D9FB7E2D-AEA5-410A-95CD-73FAEA307F87}.Release|Any CPU.ActiveCfg = Release|Any CPU
         {D9FB7E2D-AEA5-410A-95CD-73FAEA307F87}.Release|Any CPU.Build.0 = Release|Any CPU
+        {964A1FE4-97C5-4071-91AA-4287A7658FCD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+        {964A1FE4-97C5-4071-91AA-4287A7658FCD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+        {964A1FE4-97C5-4071-91AA-4287A7658FCD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+        {964A1FE4-97C5-4071-91AA-4287A7658FCD}.Release|Any CPU.Build.0 = Release|Any CPU
     EndGlobalSection
 EndGlobal
