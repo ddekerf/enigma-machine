@@ -8,7 +8,7 @@ public sealed record MachineConfiguration(
     RotorType[] Rotors,
     string RingSettings,
     string InitialPositions,
-    string[] PlugboardPairs);
+    string[]? PlugboardPairs);
 
 public sealed record ProcessTextCommand(
     string InputText,
