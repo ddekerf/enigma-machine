@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using EnigmaMachine.Domain.Interfaces;
 using EnigmaMachine.Domain.ValueObjects;
+using EnigmaMachine.Domain.Exceptions;
 
 namespace EnigmaMachine.Domain.Entities
 {
@@ -25,22 +26,22 @@ namespace EnigmaMachine.Domain.Entities
         private void ConnectInternal(char letter1, char letter2)
         {
             if (letter1 == letter2)
-                throw new ArgumentException("Cannot connect a letter to itself.");
+                throw new DomainValidationException("Cannot connect a letter to itself.");
 
             if (!char.IsLetter(letter1) || !char.IsLetter(letter2))
-                throw new ArgumentException("Only letters A-Z are allowed.");
+                throw new DomainValidationException("Only letters A-Z are allowed.");
 
             letter1 = char.ToUpperInvariant(letter1);
             letter2 = char.ToUpperInvariant(letter2);
 
             if (_connections.ContainsKey(letter1))
-                throw new InvalidOperationException($"Letter '{letter1}' is already connected to '{_connections[letter1]}'.");
+                throw new DomainOperationException($"Letter '{letter1}' is already connected to '{_connections[letter1]}'.");
 
             if (_connections.ContainsKey(letter2))
-                throw new InvalidOperationException($"Letter '{letter2}' is already connected to '{_connections[letter2]}'.");
+                throw new DomainOperationException($"Letter '{letter2}' is already connected to '{_connections[letter2]}'.");
 
             if (_connections.Count >= MaxPairs * 2)
-                throw new InvalidOperationException($"Plugboard can have at most {MaxPairs} pairs.");
+                throw new DomainOperationException($"Plugboard can have at most {MaxPairs} pairs.");
 
             _connections[letter1] = letter2;
             _connections[letter2] = letter1;
@@ -58,7 +59,7 @@ namespace EnigmaMachine.Domain.Entities
         private char GetConnectedLetter(char letter)
         {
             if (!char.IsLetter(letter))
-                throw new ArgumentException("Only letters A-Z are allowed.");
+                throw new DomainValidationException("Only letters A-Z are allowed.");
             letter = char.ToUpperInvariant(letter);
             return _connections.TryGetValue(letter, out var connectedLetter) ? connectedLetter : letter;
         }

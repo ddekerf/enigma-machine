@@ -5,6 +5,18 @@ namespace EnigmaMachine.Domain.Tests
 {
     public class LetterTests
     {
+        [Theory]
+        [InlineData(-1, 'Z')]
+        [InlineData(0, 'A')]
+        [InlineData(25, 'Z')]
+        [InlineData(26, 'A')]
+        [InlineData(27, 'B')]
+        public void RotorPosition_Normalizes_And_Maps_To_Letters(int index, char expected)
+        {
+            var rp = new RotorPosition(index);
+            Assert.Equal(expected, rp.Letter);
+        }
+
         [Fact]
         public void Letters_WithSameCharacter_AreEqual()
         {

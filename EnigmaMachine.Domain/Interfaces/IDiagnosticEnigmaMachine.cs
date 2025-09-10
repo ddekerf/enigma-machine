@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using EnigmaMachine.Domain.ValueObjects;
 
 namespace EnigmaMachine.Domain.Interfaces
 {
@@ -13,5 +14,12 @@ namespace EnigmaMachine.Domain.Interfaces
         /// Order: index 0 is the rightmost (fast) rotor, last is the leftmost (slow) rotor.
         /// </summary>
         IReadOnlyList<int> RotorPositions { get; }
+
+        /// <summary>
+        /// Snapshot of rotor positions as rich value objects with A–Z view.
+        /// Non-breaking addition intended for UI/diagnostics.
+        /// Order: index 0 is the rightmost (fast) rotor, last is the leftmost (slow) rotor.
+        /// </summary>
+        IReadOnlyList<RotorPosition> RotorPositionsView { get; }
     }
 }

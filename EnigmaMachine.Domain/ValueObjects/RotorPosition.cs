@@ -1,46 +1,54 @@
-// RotorPosition.cs
+// RotorPosition.cs (rich value object for UI/diagnostics)
+using System;
+
 namespace EnigmaMachine.Domain.ValueObjects
 {
-    using System;
-
     /// <summary>
-    /// Represents the position of a rotor in the Enigma machine.
+    /// Immutable rotor position in range 0–25 with wrap-around semantics.
+    /// Provides conversions to and from A–Z letters.
     /// </summary>
-    public class RotorPosition
+    public readonly struct RotorPosition : IEquatable<RotorPosition>
     {
         /// <summary>
-        /// Gets the current position of the rotor.
+        /// 0-based position (0..25). 0 corresponds to 'A', 25 corresponds to 'Z'.
         /// </summary>
-        public int Position { get; private set; }
+        public int Index { get; }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="RotorPosition"/> class.
+        /// Uppercase letter view of the position ('A'..'Z').
         /// </summary>
-        /// <param name="position">The initial position of the rotor.</param>
-        public RotorPosition(int position)
-        {
-            if (position < 0)
-            {
-                throw new ArgumentOutOfRangeException(nameof(position), "Position cannot be negative.");
-            }
+        public char Letter => (char)('A' + Index);
 
-            Position = position;
+        public RotorPosition(int index)
+        {
+            // Normalize to [0,25] using Euclidean modulo
+            Index = Normalize(index);
         }
 
-        /// <summary>
-        /// Advances the rotor position by one.
-        /// </summary>
-        public void Advance()
+        public static RotorPosition FromChar(char c)
         {
-            Position++;
+            if (!char.IsLetter(c)) throw new ArgumentOutOfRangeException(nameof(c), "Letter A-Z expected.");
+            c = char.ToUpperInvariant(c);
+            if (c < 'A' || c > 'Z') throw new ArgumentOutOfRangeException(nameof(c), "Letter A-Z expected.");
+            return new RotorPosition(c - 'A');
         }
 
-        /// <summary>
-        /// Resets the rotor position to the initial state.
-        /// </summary>
-        public void Reset()
+        public RotorPosition Advance(int steps = 1) => new RotorPosition(Index + steps);
+        public RotorPosition Retreat(int steps = 1) => new RotorPosition(Index - steps);
+
+        public override string ToString() => Letter.ToString();
+
+        public bool Equals(RotorPosition other) => Index == other.Index;
+        public override bool Equals(object? obj) => obj is RotorPosition rp && Equals(rp);
+        public override int GetHashCode() => Index;
+        public static bool operator ==(RotorPosition left, RotorPosition right) => left.Equals(right);
+        public static bool operator !=(RotorPosition left, RotorPosition right) => !left.Equals(right);
+
+        private static int Normalize(int value)
         {
-            Position = 0;
+            int m = value % 26;
+            if (m < 0) m += 26;
+            return m;
         }
     }
 }

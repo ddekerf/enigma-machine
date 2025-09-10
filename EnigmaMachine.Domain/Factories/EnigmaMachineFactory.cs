@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using EnigmaMachine.Domain.Entities;
 using EnigmaMachine.Domain.Interfaces;
 using EnigmaMachine.Domain.ValueObjects;
+using EnigmaMachine.Domain.Exceptions;
 
 namespace EnigmaMachine.Domain.Factories
 {
@@ -30,7 +31,7 @@ namespace EnigmaMachine.Domain.Factories
         {
             if (types.Length != 3 || ringSettings.Length != 3 || initialPositions.Length != 3)
             {
-                throw new ArgumentException("Enigma I requires exactly three rotors");
+                throw new DomainValidationException("Enigma I requires exactly three rotors");
             }
 
             ValidateAtoZ(ringSettings, nameof(ringSettings));
@@ -70,7 +71,7 @@ namespace EnigmaMachine.Domain.Factories
         {
             if (typesLeftToRight.Length != 3 || ringSettingsLeftToRight.Length != 3 || initialPositionsLeftToRight.Length != 3)
             {
-                throw new ArgumentException("Enigma I requires exactly three rotors");
+                throw new DomainValidationException("Enigma I requires exactly three rotors");
             }
 
             ValidateAtoZ(ringSettingsLeftToRight, nameof(ringSettingsLeftToRight));

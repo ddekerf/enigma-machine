@@ -4,7 +4,13 @@ VisualStudioVersion = 17.0.31913.123
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EnigmaMachine.Domain", "EnigmaMachine.Domain\EnigmaMachine.Domain.csproj", "{D1A5C5B2-5D5B-4D3B-8A3D-5D5B5E5B5E5B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EnigmaMachine.Domain.Tests", "EnigmaMachine.Domain.Tests\\EnigmaMachine.Domain.Tests.csproj", "{60CD04B3-D664-47C8-9E8B-D91EEA9DAAA7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EnigmaMachine.Domain.Tests", "EnigmaMachine.Domain.Tests\EnigmaMachine.Domain.Tests.csproj", "{60CD04B3-D664-47C8-9E8B-D91EEA9DAAA7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EnigmaMachine.Application", "EnigmaMachine.Application\EnigmaMachine.Application.csproj", "{D9FB7E2D-AEA5-410A-95CD-73FAEA307F87}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EnigmaMachine.Api", "EnigmaMachine.Api\EnigmaMachine.Api.csproj", "{964A1FE4-97C5-4071-91AA-4287A7658FCD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EnigmaMachine.Application.Tests", "EnigmaMachine.Application.Tests\EnigmaMachine.Application.Tests.csproj", "{E2DA8DE0-4C0F-4416-A542-183126DBFF9D}"
 EndProject
 Global
     GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -20,5 +26,17 @@ Global
         {60CD04B3-D664-47C8-9E8B-D91EEA9DAAA7}.Debug|Any CPU.Build.0 = Debug|Any CPU
         {60CD04B3-D664-47C8-9E8B-D91EEA9DAAA7}.Release|Any CPU.ActiveCfg = Release|Any CPU
         {60CD04B3-D664-47C8-9E8B-D91EEA9DAAA7}.Release|Any CPU.Build.0 = Release|Any CPU
+        {D9FB7E2D-AEA5-410A-95CD-73FAEA307F87}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+        {D9FB7E2D-AEA5-410A-95CD-73FAEA307F87}.Debug|Any CPU.Build.0 = Debug|Any CPU
+        {D9FB7E2D-AEA5-410A-95CD-73FAEA307F87}.Release|Any CPU.ActiveCfg = Release|Any CPU
+        {D9FB7E2D-AEA5-410A-95CD-73FAEA307F87}.Release|Any CPU.Build.0 = Release|Any CPU
+        {964A1FE4-97C5-4071-91AA-4287A7658FCD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+        {964A1FE4-97C5-4071-91AA-4287A7658FCD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+        {964A1FE4-97C5-4071-91AA-4287A7658FCD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+        {964A1FE4-97C5-4071-91AA-4287A7658FCD}.Release|Any CPU.Build.0 = Release|Any CPU
+        {E2DA8DE0-4C0F-4416-A542-183126DBFF9D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+        {E2DA8DE0-4C0F-4416-A542-183126DBFF9D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+        {E2DA8DE0-4C0F-4416-A542-183126DBFF9D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+        {E2DA8DE0-4C0F-4416-A542-183126DBFF9D}.Release|Any CPU.Build.0 = Release|Any CPU
     EndGlobalSection
 EndGlobal

@@ -6,7 +6,7 @@
 This repository contains a .NET 8 domain library that models the WWII Enigma machine. It follows DDD/Clean Architecture principles: the domain is infrastructure-free and test-driven.
 
 ## Projects
-- EnigmaMachine.Domain: core business logic (rotors, plugboard, reflector, machine, factories)
+- EnigmaMachine.Domain: core business logic (rotors, plugboard, reflector, machine, factories, value objects)
 - EnigmaMachine.Domain.Tests: xUnit tests covering encoding scenarios and stepping
 
 ## Build and test
@@ -21,6 +21,7 @@ This repository contains a .NET 8 domain library that models the WWII Enigma mac
 ## Scope
 - Enigma I (3 rotors) with Reflector B
 - Historical rotor wirings I–V and correct double-stepping behavior
+- UI-friendly diagnostics via `IDiagnosticEnigmaMachine` (see Domain README)
 
 ## Notes
 - Non-thread-safe: create separate instances per concurrent operation
@@ -42,7 +43,7 @@ foreach (var pair in new[] { "BA", "QU", "CG" })
 
 var reflector = new ReflectorB();
 
-// Supply left-to-right (slow to fast) order
+// Supply left-to-right (slow to fast) order; API reverses to machine order internally
 var machine = EnigmaMachineFactory.CreateEnigmaILeftToRight(
 	new[] { RotorType.I, RotorType.III, RotorType.V },
 	new[] { 'A', 'B', 'C' },          // ring settings L→R
@@ -60,4 +61,14 @@ foreach (var ch in input)
 	sb.Append(machine.ProcessLetter(letter).Character);
 }
 var cipher = sb.ToString();
+
+// Diagnostics (optional): cast to IDiagnosticEnigmaMachine to inspect rotor positions
+var diag = (IDiagnosticEnigmaMachine)machine;
+// 0–25 indices, rightmost (fast) at index 0
+var numeric = diag.RotorPositions;
+// Rich view for UI: A–Z letters and normalized indices
+var view = diag.RotorPositionsView; // RotorPosition value objects
 ```
+
+Notes:
+- The `EnigmaMachine` constructor validates the rotor list: it must be non-null, non-empty, and contain no null entries.

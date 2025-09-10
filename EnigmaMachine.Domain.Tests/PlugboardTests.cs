@@ -2,6 +2,7 @@ using System;
 using EnigmaMachine.Domain.Entities;
 using EnigmaMachine.Domain.ValueObjects;
 using Xunit;
+using EnigmaMachine.Domain.Exceptions;
 
 namespace EnigmaMachine.Domain.Tests
 {
@@ -13,7 +14,7 @@ namespace EnigmaMachine.Domain.Tests
             var plugboard = new Plugboard();
             plugboard.Connect(new PlugboardPair('A', 'B'));
 
-            var ex = Assert.Throws<InvalidOperationException>(() => plugboard.Connect(new PlugboardPair('A', 'C')));
+            var ex = Assert.Throws<DomainOperationException>(() => plugboard.Connect(new PlugboardPair('A', 'C')));
             Assert.Contains("already connected", ex.Message);
         }
 
@@ -27,7 +28,7 @@ namespace EnigmaMachine.Domain.Tests
                 plugboard.Connect(new PlugboardPair(pair[0], pair[1]));
             }
 
-            Assert.Throws<InvalidOperationException>(() => plugboard.Connect(new PlugboardPair('U', 'V')));
+            Assert.Throws<DomainOperationException>(() => plugboard.Connect(new PlugboardPair('U', 'V')));
         }
     }
 

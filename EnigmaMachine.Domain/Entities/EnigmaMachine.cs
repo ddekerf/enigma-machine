@@ -30,6 +30,20 @@ namespace EnigmaMachine.Domain.Entities
         public EnigmaMachine(List<IRotor> rotors, IPlugboard plugboard, IReflector reflector)
         {
             if (rotors == null) throw new ArgumentNullException(nameof(rotors));
+            if (rotors.Count == 0)
+            {
+                throw new Exceptions.DomainValidationException("At least one rotor is required.");
+            }
+
+            // Validate that no rotor entry is null
+            for (int i = 0; i < rotors.Count; i++)
+            {
+                if (rotors[i] is null)
+                {
+                    throw new Exceptions.DomainValidationException($"Rotor at index {i} is null.");
+                }
+            }
+
             _rotors = rotors.ToArray(); // defensive copy to avoid external mutation
             _plugboard = plugboard ?? throw new ArgumentNullException(nameof(plugboard));
             _reflector = reflector ?? throw new ArgumentNullException(nameof(reflector));
@@ -114,6 +128,19 @@ namespace EnigmaMachine.Domain.Entities
                 for (int i = 0; i < _rotors.Length; i++)
                 {
                     arr[i] = _rotors[i].Position;
+                }
+                return arr;
+            }
+        }
+
+        public IReadOnlyList<RotorPosition> RotorPositionsView
+        {
+            get
+            {
+                var arr = new RotorPosition[_rotors.Length];
+                for (int i = 0; i < _rotors.Length; i++)
+                {
+                    arr[i] = new RotorPosition(_rotors[i].Position);
                 }
                 return arr;
             }
