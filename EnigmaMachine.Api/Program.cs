@@ -17,6 +17,7 @@ builder.Services.AddTransient<Func<IReflector>>(_ => () => new ReflectorB());
 builder.Services.AddTransient<Func<RotorType[], char[], char[], IPlugboard, IReflector, IEnigmaMachine>>(
     _ => (rotors, ringSettings, initialPositions, plugboard, reflector) =>
         EnigmaMachineFactory.CreateEnigmaILeftToRight(rotors, ringSettings, initialPositions, plugboard, reflector));
+builder.Services.AddTransient<ITextTransformer, DefaultTextTransformer>();
 
 var app = builder.Build();
 

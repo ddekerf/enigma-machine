@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using MediatR;
 using EnigmaMachine.Application.Commands;
 using EnigmaMachine.Application.Dtos;
-using EnigmaMachine.Domain.Entities;
 using EnigmaMachine.Domain.Factories;
 using EnigmaMachine.Domain.Interfaces;
 using EnigmaMachine.Domain.ValueObjects;
@@ -18,15 +17,18 @@ public sealed class ProcessTextHandler : IRequestHandler<ProcessTextCommand, Pro
     private readonly Func<IPlugboard> _plugboardFactory;
     private readonly Func<IReflector> _reflectorFactory;
     private readonly Func<RotorType[], char[], char[], IPlugboard, IReflector, IEnigmaMachine> _machineFactory;
+    private readonly ITextTransformer _textTransformer;
 
     public ProcessTextHandler(
         Func<IPlugboard> plugboardFactory,
         Func<IReflector> reflectorFactory,
-        Func<RotorType[], char[], char[], IPlugboard, IReflector, IEnigmaMachine> machineFactory)
+        Func<RotorType[], char[], char[], IPlugboard, IReflector, IEnigmaMachine> machineFactory,
+        ITextTransformer textTransformer)
     {
         _plugboardFactory = plugboardFactory;
         _reflectorFactory = reflectorFactory;
         _machineFactory = machineFactory;
+        _textTransformer = textTransformer;
     }
 
     public Task<ProcessTextResult> Handle(ProcessTextCommand request, CancellationToken cancellationToken)
@@ -54,8 +56,7 @@ public sealed class ProcessTextHandler : IRequestHandler<ProcessTextCommand, Pro
             reflector);
 
         var diag = (IDiagnosticEnigmaMachine)machine;
-        var transformer = new DefaultTextTransformer();
-        var encoded = transformer.Encode(request.InputText ?? string.Empty);
+        var encoded = _textTransformer.Encode(request.InputText ?? string.Empty);
 
         var sb = new StringBuilder();
         var states = new List<MachineStateDto>();
