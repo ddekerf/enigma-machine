@@ -1,6 +1,7 @@
 using System.Text;
 using EnigmaMachine.Domain.Interfaces;
 using EnigmaMachine.Domain.ValueObjects;
+using EnigmaMachine.Domain.Exceptions;
 
 namespace EnigmaMachine.Domain.Extensions
 {
@@ -31,7 +32,7 @@ namespace EnigmaMachine.Domain.Extensions
                     }
                     else
                     {
-                        throw new System.ArgumentException("Input contains non-letter characters and passThroughNonLetters is false.");
+                        throw new DomainValidationException("Input contains non-letter characters and passThroughNonLetters is false.");
                     }
                 }
             }

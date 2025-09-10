@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using EnigmaMachine.Domain.Interfaces;
+using EnigmaMachine.Domain.Exceptions;
 
 namespace EnigmaMachine.Domain.Entities
 {
@@ -146,11 +147,11 @@ namespace EnigmaMachine.Domain.Entities
         private static string ValidateToken(string token)
         {
             if (string.IsNullOrWhiteSpace(token))
-                throw new ArgumentException("Token must be non-empty letters.", nameof(token));
+                throw new DomainValidationException("Token must be non-empty letters.");
             foreach (var c in token)
             {
                 if (!char.IsLetter(c))
-                    throw new ArgumentException("Token must contain only letters A-Z.");
+                    throw new DomainValidationException("Token must contain only letters A-Z.");
             }
             return token.ToUpperInvariant();
         }

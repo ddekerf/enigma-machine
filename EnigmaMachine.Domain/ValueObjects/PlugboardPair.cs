@@ -1,4 +1,5 @@
 using System;
+using EnigmaMachine.Domain.Exceptions;
 
 // This file defines the PlugboardPair value object, representing a pair of letters connected in the plugboard.
 
@@ -27,13 +28,13 @@ namespace EnigmaMachine.Domain.ValueObjects
         public PlugboardPair(char firstLetter, char secondLetter)
         {
             if (!char.IsLetter(firstLetter) || !char.IsLetter(secondLetter))
-                throw new ArgumentException("Plugboard pairs must be letters A-Z");
+                throw new DomainValidationException("Plugboard pairs must be letters A-Z");
 
             firstLetter = char.ToUpperInvariant(firstLetter);
             secondLetter = char.ToUpperInvariant(secondLetter);
 
             if (firstLetter == secondLetter)
-                throw new ArgumentException("Plugboard cannot connect a letter to itself.");
+                throw new DomainValidationException("Plugboard cannot connect a letter to itself.");
 
             // Normalize ordering so that (A,B) is considered equal to (B,A)
             if (firstLetter > secondLetter)

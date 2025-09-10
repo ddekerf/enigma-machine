@@ -32,7 +32,7 @@ namespace EnigmaMachine.Domain.Entities
             if (rotors == null) throw new ArgumentNullException(nameof(rotors));
             if (rotors.Count == 0)
             {
-                throw new ArgumentException("At least one rotor is required.", nameof(rotors));
+                throw new Exceptions.DomainValidationException("At least one rotor is required.");
             }
 
             // Validate that no rotor entry is null
@@ -40,7 +40,7 @@ namespace EnigmaMachine.Domain.Entities
             {
                 if (rotors[i] is null)
                 {
-                    throw new ArgumentException($"Rotor at index {i} is null.", nameof(rotors));
+                    throw new Exceptions.DomainValidationException($"Rotor at index {i} is null.");
                 }
             }
 

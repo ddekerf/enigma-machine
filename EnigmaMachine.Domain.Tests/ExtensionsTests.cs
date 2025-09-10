@@ -4,6 +4,7 @@ using EnigmaMachine.Domain.Factories;
 using EnigmaMachine.Domain.Interfaces;
 using EnigmaMachine.Domain.ValueObjects;
 using Xunit;
+using EnigmaMachine.Domain.Exceptions;
 
 namespace EnigmaMachine.Domain.Tests
 {
@@ -32,7 +33,7 @@ namespace EnigmaMachine.Domain.Tests
         public void Process_Throws_OnNonLetters_WhenDisabled()
         {
             var m = Build();
-            Assert.Throws<System.ArgumentException>(() => m.Process("HI!", passThroughNonLetters: false));
+            Assert.Throws<DomainValidationException>(() => m.Process("HI!", passThroughNonLetters: false));
         }
 
         [Fact]

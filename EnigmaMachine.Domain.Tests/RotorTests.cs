@@ -5,6 +5,7 @@ using EnigmaMachine.Domain.Interfaces;
 using EnigmaMachine.Domain.ValueObjects;
 using Xunit;
 using EnigmaMachine.Domain.Entities;
+using EnigmaMachine.Domain.Exceptions;
 
 namespace EnigmaMachine.Domain.Tests
 {
@@ -15,7 +16,7 @@ namespace EnigmaMachine.Domain.Tests
         {
             var plugboard = new Plugboard();
             var reflector = new ReflectorB();
-            var ex = Assert.Throws<ArgumentException>(() => { var _ = new global::EnigmaMachine.Domain.Entities.EnigmaMachine(new List<IRotor>(), plugboard, reflector); });
+            var ex = Assert.Throws<DomainValidationException>(() => { var _ = new global::EnigmaMachine.Domain.Entities.EnigmaMachine(new List<IRotor>(), plugboard, reflector); });
             Assert.Contains("At least one rotor is required", ex.Message);
         }
 
@@ -25,7 +26,7 @@ namespace EnigmaMachine.Domain.Tests
             var plugboard = new Plugboard();
             var reflector = new ReflectorB();
             var rotors = new List<IRotor> { null! };
-            Assert.Throws<ArgumentException>(() => { var _ = new global::EnigmaMachine.Domain.Entities.EnigmaMachine(rotors, plugboard, reflector); });
+            Assert.Throws<DomainValidationException>(() => { var _ = new global::EnigmaMachine.Domain.Entities.EnigmaMachine(rotors, plugboard, reflector); });
         }
         private static IRotor Create(RotorType type, char ring, char pos)
             => RotorFactory.Create(type, ring, pos);

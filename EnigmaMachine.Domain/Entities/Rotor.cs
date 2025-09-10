@@ -1,6 +1,7 @@
 // Rotor.cs
 using System;
 using EnigmaMachine.Domain.Interfaces;
+using EnigmaMachine.Domain.Exceptions;
 
 namespace EnigmaMachine.Domain.Entities
 {
@@ -26,7 +27,7 @@ namespace EnigmaMachine.Domain.Entities
         public Rotor(string wiring, char notch, char ringSetting, char initialPosition)
         {
             if (string.IsNullOrWhiteSpace(wiring) || wiring.Length != 26)
-                throw new ArgumentException("Wiring must be 26 characters long", nameof(wiring));
+                throw new DomainValidationException("Wiring must be 26 characters long");
 
             wiring = wiring.ToUpperInvariant();
 
@@ -36,10 +37,10 @@ namespace EnigmaMachine.Domain.Entities
             {
                 char ch = wiring[i];
                 if (ch < 'A' || ch > 'Z')
-                    throw new ArgumentException("Wiring must contain only A-Z letters", nameof(wiring));
+                    throw new DomainValidationException("Wiring must contain only A-Z letters");
                 int idx = ch - 'A';
                 if (seen[idx])
-                    throw new ArgumentException("Wiring must map each letter exactly once (no duplicates)", nameof(wiring));
+                    throw new DomainValidationException("Wiring must map each letter exactly once (no duplicates)");
                 seen[idx] = true;
             }
 

@@ -1,4 +1,5 @@
 using System;
+using EnigmaMachine.Domain.Exceptions;
 
 // Letter.cs
 namespace EnigmaMachine.Domain.ValueObjects
@@ -17,12 +18,12 @@ namespace EnigmaMachine.Domain.ValueObjects
         /// Initializes a new instance of the <see cref="Letter"/> record struct.
         /// </summary>
         /// <param name="character">The character representing the letter.</param>
-        /// <exception cref="ArgumentException">Thrown when the character is not a valid letter.</exception>
+    /// <exception cref="Domain.Exceptions.DomainValidationException">Thrown when the character is not a valid letter.</exception>
         public Letter(char character)
         {
             if (!char.IsLetter(character))
             {
-                throw new ArgumentException("Character must be a letter.", nameof(character));
+                throw new DomainValidationException("Character must be a letter.");
             }
 
             Character = char.ToUpperInvariant(character);
