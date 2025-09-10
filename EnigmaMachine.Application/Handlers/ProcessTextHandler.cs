@@ -73,7 +73,11 @@ public sealed class ProcessTextHandler : IRequestHandler<ProcessTextCommand, Pro
             sb.Append(output);
 
             var positions = diag.RotorPositionsView.Select(rp => rp.Letter).ToArray();
-            states.Add(new MachineStateDto(ch, output, positions));
+            var plugs = plugboard
+                .GetConnections()
+                .Select(p => new PlugboardPairDto(p.FirstLetter, p.SecondLetter))
+                .ToArray();
+            states.Add(new MachineStateDto(ch, output, positions, plugs));
         }
 
         var result = new ProcessTextResult(sb.ToString(), states);

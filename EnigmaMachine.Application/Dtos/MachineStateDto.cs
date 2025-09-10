@@ -5,4 +5,5 @@ namespace EnigmaMachine.Application.Dtos;
 public sealed record MachineStateDto(
     char Input,
     char Output,
-    IReadOnlyList<char> RotorPositions);
+    IReadOnlyList<char> RotorPositions,
+    IReadOnlyList<PlugboardPairDto> Plugboard);
