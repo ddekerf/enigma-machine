@@ -21,6 +21,11 @@ builder.Services.AddTransient<ITextTransformer, DefaultTextTransformer>();
 
 var app = builder.Build();
 
+app.MapGet("/", () =>
+    Results.Text(
+        "EnigmaMachine API is running. POST /api/enigma/process to encode text.",
+        "text/plain"));
+
 app.MapPost("/api/enigma/process", async (ProcessTextCommand command, IMediator mediator) =>
 {
     var result = await mediator.Send(command);
