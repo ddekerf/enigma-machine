@@ -19,7 +19,17 @@ builder.Services.AddTransient<Func<RotorType[], char[], char[], IPlugboard, IRef
         EnigmaMachineFactory.CreateEnigmaILeftToRight(rotors, ringSettings, initialPositions, plugboard, reflector));
 builder.Services.AddTransient<ITextTransformer, DefaultTextTransformer>();
 
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(policy =>
+        policy.AllowAnyOrigin()
+              .AllowAnyHeader()
+              .AllowAnyMethod());
+});
+
 var app = builder.Build();
+
+app.UseCors();
 
 app.MapGet("/", () =>
     Results.Text(

@@ -8,6 +8,10 @@ This repository contains a .NET 8 domain library that models the WWII Enigma mac
 ## Projects
 - EnigmaMachine.Domain: core business logic (rotors, plugboard, reflector, machine, factories, value objects)
 - EnigmaMachine.Domain.Tests: xUnit tests covering encoding scenarios and stepping
+- EnigmaMachine.Application: application layer and CQRS handlers
+- EnigmaMachine.Application.Tests: tests for the application layer
+- EnigmaMachine.Api: minimal API for processing text
+- EnigmaMachine.Web: standalone web UI that communicates with the API
 
 ## Build and test
 
@@ -39,26 +43,26 @@ using EnigmaMachine.Domain.ValueObjects;
 
 var plugboard = new Plugboard();
 foreach (var pair in new[] { "BA", "QU", "CG" })
-	plugboard.Connect(new PlugboardPair(pair[0], pair[1]));
+        plugboard.Connect(new PlugboardPair(pair[0], pair[1]));
 
 var reflector = new ReflectorB();
 
 // Supply left-to-right (slow to fast) order; API reverses to machine order internally
 var machine = EnigmaMachineFactory.CreateEnigmaILeftToRight(
-	new[] { RotorType.I, RotorType.III, RotorType.V },
-	new[] { 'A', 'B', 'C' },          // ring settings L→R
-	new[] { 'X', 'Y', 'Z' },          // initial positions L→R
-	plugboard,
-	reflector);
+        new[] { RotorType.I, RotorType.III, RotorType.V },
+        new[] { 'A', 'B', 'C' },          // ring settings L→R
+        new[] { 'X', 'Y', 'Z' },          // initial positions L→R
+        plugboard,
+        reflector);
 
 // Process text
 var input = "HELLO WORLD";
 var sb = new System.Text.StringBuilder();
 foreach (var ch in input)
 {
-	if (!char.IsLetter(ch)) { sb.Append(ch); continue; }
-	var letter = new Letter(ch);
-	sb.Append(machine.ProcessLetter(letter).Character);
+        if (!char.IsLetter(ch)) { sb.Append(ch); continue; }
+        var letter = new Letter(ch);
+        sb.Append(machine.ProcessLetter(letter).Character);
 }
 var cipher = sb.ToString();
 

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Enigma Machine</title>
+    <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+    <h1>Enigma Machine</h1>
+    <section id="config">
+        <h2>Configuration</h2>
+        <div>
+            <label>Rotor 1
+                <select id="rotor1"></select>
+            </label>
+            <label>Rotor 2
+                <select id="rotor2"></select>
+            </label>
+            <label>Rotor 3
+                <select id="rotor3"></select>
+            </label>
+        </div>
+        <div>
+            <label>Ring Settings
+                <input id="ringSettings" value="AAA" />
+            </label>
+            <label>Initial Positions
+                <input id="initialPositions" value="AAA" />
+            </label>
+        </div>
+        <div>
+            <label>Plugboard Pairs
+                <input id="plugboardPairs" placeholder="AB CD EF" />
+            </label>
+        </div>
+    </section>
+    <section id="io">
+        <h2>Input / Output</h2>
+        <textarea id="inputText" placeholder="Type text here..."></textarea>
+        <textarea id="outputText" placeholder="Encrypted output" readonly></textarea>
+    </section>
+    <section id="steps">
+        <h2>Machine State</h2>
+        <table id="stateTable">
+            <thead>
+                <tr><th>Input</th><th>Output</th><th>Rotor Positions</th></tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </section>
+    <script src="app.js"></script>
+</body>
+</html>
