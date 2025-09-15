@@ -6,6 +6,6 @@
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\EnigmaMachine.Domain\EnigmaMachine.Domain.csproj" />
-    <PackageReference Include="MediatR" Version="12.1.1" />
+    <PackageReference Include="MediatR" Version="13.0.0" />
   </ItemGroup>
 </Project>
