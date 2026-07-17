@@ -9,7 +9,7 @@ const BOARD_ROWS = [
 
 const ROTOR_TYPES = ['I', 'II', 'III', 'IV', 'V'];
 const ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-const MAX_CABLES = 13;
+const MAX_CABLES = 10;
 const CABLE_COLORS = [
     '#c0392b', '#2980b9', '#27ae60', '#d4a017', '#8e44ad',
     '#d35400', '#16a085', '#7f8c8d', '#c2185b', '#5d4037',
@@ -303,13 +303,17 @@ async function processMessage() {
         if (seq !== requestSeq) return; // a newer keystroke superseded this request
         if (!res.ok) {
             setApiStatus(false);
+            renderResult(null);
             return;
         }
         const data = await res.json();
         setApiStatus(true);
         renderResult(data);
     } catch {
-        if (seq === requestSeq) setApiStatus(false);
+        if (seq === requestSeq) {
+            setApiStatus(false);
+            renderResult(null);
+        }
     }
 }
 
