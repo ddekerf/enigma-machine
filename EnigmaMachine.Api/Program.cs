@@ -8,6 +8,10 @@ using MediatR;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Accept enum values as strings (e.g. rotor types "I".."V") in JSON payloads
+builder.Services.ConfigureHttpJsonOptions(options =>
+    options.SerializerOptions.Converters.Add(new System.Text.Json.Serialization.JsonStringEnumConverter()));
+
 // Application services
 builder.Services.AddApplication();
 
