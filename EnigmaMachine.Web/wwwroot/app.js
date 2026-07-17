@@ -303,6 +303,7 @@ async function processMessage() {
         if (seq !== requestSeq) return; // a newer keystroke superseded this request
         if (!res.ok) {
             setApiStatus(false);
+            renderResult(null);
             return;
         }
         const data = await res.json();
