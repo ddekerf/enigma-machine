@@ -4,4 +4,5 @@ namespace EnigmaMachine.Application.Dtos;
 
 public sealed record ProcessTextResult(
     string CipherText,
+    MachineConfigurationDto Configuration,
     IReadOnlyList<MachineStateDto> Steps);

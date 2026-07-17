@@ -5,7 +5,8 @@
       "name": "api",
       "runtimeExecutable": "dotnet",
       "runtimeArgs": ["run", "--project", "EnigmaMachine.Api"],
-      "port": 5080
+      "port": 5080,
+      "autoPort": false
     },
     {
       "name": "web",

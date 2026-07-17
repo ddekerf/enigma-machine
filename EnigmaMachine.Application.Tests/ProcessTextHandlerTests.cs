@@ -40,7 +40,11 @@ public class ProcessTextHandlerTests
         Assert.Equal("DXXIQUIJZMNBEH", result.CipherText);
         Assert.Equal(14, result.Steps.Count);
         Assert.All(result.Steps, s => Assert.Equal(3, s.RotorPositions.Count));
-        Assert.All(result.Steps, s => Assert.Equal(10, s.Plugboard.Count));
+        Assert.Equal(new[] { RotorType.I, RotorType.III, RotorType.V }, result.Configuration.Rotors);
+        Assert.Equal("BBB", result.Configuration.RingSettings);
+        Assert.Equal("WWW", result.Configuration.InitialPositions);
+        Assert.Equal("UKW-B", result.Configuration.Reflector);
+        Assert.Equal(10, result.Configuration.Plugboard.Count);
     }
 
     [Fact]
