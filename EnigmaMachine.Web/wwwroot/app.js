@@ -310,7 +310,10 @@ async function processMessage() {
         setApiStatus(true);
         renderResult(data);
     } catch {
-        if (seq === requestSeq) setApiStatus(false);
+        if (seq === requestSeq) {
+            setApiStatus(false);
+            renderResult(null);
+        }
     }
 }
 
