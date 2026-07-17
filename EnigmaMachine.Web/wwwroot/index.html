@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Enigma I — Chiffriermaschine</title>
+    <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+    <main class="machine">
+
+        <!-- Open lid: message card (paper) -->
+        <section class="lid">
+            <div class="lid-inner">
+                <div class="message-card">
+                    <div class="card-header">
+                        <span class="geheim">Geheim!</span>
+                        <span class="card-title">Funkspruch&nbsp;&mdash;&nbsp;Meldung</span>
+                        <span id="apiStatus" class="api-status" title="API status">
+                            <span class="status-dot"></span><span class="status-text">&mdash;</span>
+                        </span>
+                    </div>
+                    <div class="card-row">
+                        <label>Klartext</label>
+                        <div id="plainTape" class="tape plain-tape">&nbsp;</div>
+                    </div>
+                    <div class="card-row">
+                        <label>Geheimtext</label>
+                        <div id="cipherTape" class="tape cipher-tape">&nbsp;</div>
+                    </div>
+                    <div class="card-actions">
+                        <button id="copyBtn" class="card-btn" title="Copy cipher text">Copy cipher</button>
+                        <button id="clearBtn" class="card-btn" title="Clear message and reset rotors to start positions">Neue Meldung</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Machine body -->
+        <section class="body-case">
+
+            <!-- Rotor / settings panel -->
+            <div class="rotor-panel">
+                <div class="panel-plate left-plate">
+                    <span class="plate-line">Chiffriermaschine</span>
+                    <span class="plate-line plate-model">ENIGMA&nbsp;I</span>
+                </div>
+
+                <div class="rotors" id="rotors">
+                    <!-- rotor units injected by app.js -->
+                </div>
+
+                <div class="panel-plate right-plate">
+                    <span class="plate-line">UKW&nbsp;B</span>
+                    <span class="plate-line plate-model">4&nbsp;Volt</span>
+                </div>
+            </div>
+
+            <!-- Lampboard -->
+            <div class="lampboard" id="lampboard"></div>
+
+            <!-- Keyboard -->
+            <div class="keyboard" id="keyboard"></div>
+
+            <!-- Plugboard -->
+            <div class="plugboard-wrap">
+                <div class="plugboard-label">Steckerbrett</div>
+                <div class="plugboard" id="plugboard">
+                    <svg id="cableLayer" class="cable-layer"></svg>
+                </div>
+                <div class="plugboard-hint" id="plugHint">Click two sockets to connect a cable &middot; click a connected socket to remove it</div>
+            </div>
+
+        </section>
+    </main>
+
+    <script src="app.js"></script>
+</body>
+</html>
