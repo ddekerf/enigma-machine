@@ -58,6 +58,18 @@ public sealed class ProcessTextHandler : IRequestHandler<ProcessTextCommand, Pro
         var diag = (IDiagnosticEnigmaMachine)machine;
         var encoded = _textTransformer.Encode(request.InputText ?? string.Empty);
 
+        // The configuration does not change while processing a message, so report it once
+        var plugs = plugboard
+            .GetConnections()
+            .Select(p => new PlugboardPairDto(p.FirstLetter, p.SecondLetter))
+            .ToArray();
+        var configuration = new MachineConfigurationDto(
+            cfg.Rotors,
+            cfg.RingSettings.ToUpperInvariant(),
+            cfg.InitialPositions.ToUpperInvariant(),
+            "UKW-B", // the factory wires a fixed ReflectorB
+            plugs);
+
         var sb = new StringBuilder();
         var states = new List<MachineStateDto>();
 
@@ -74,14 +86,10 @@ public sealed class ProcessTextHandler : IRequestHandler<ProcessTextCommand, Pro
             sb.Append(output);
 
             var positions = diag.RotorPositionsView.Select(rp => rp.Letter).ToArray();
-            var plugs = plugboard
-                .GetConnections()
-                .Select(p => new PlugboardPairDto(p.FirstLetter, p.SecondLetter))
-                .ToArray();
-            states.Add(new MachineStateDto(ch, output, positions, plugs));
+            states.Add(new MachineStateDto(ch, output, positions));
         }
 
-        var result = new ProcessTextResult(sb.ToString(), states);
+        var result = new ProcessTextResult(sb.ToString(), configuration, states);
         return Task.FromResult(result);
     }
 }
